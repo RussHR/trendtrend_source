@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/RussHR/trendtrend_source/issues"
   },
-  "homepage": "https://github.com/RussHR/trendtrend_source"
+  "homepage": "https://github.com/RussHR/trendtrend_source",
+  "devDependencies": {
+    "gulp": "^3.9.0"
+  }
 }
