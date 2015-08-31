@@ -1,5 +1,49 @@
+// use process.stdout.write instead of console.log
+
+// Gulp
 var gulp = require('gulp');
 
-gulp.task('default', function() {
-  // place code for your default task here
+// gulp modules
+var autoprefix = require('gulp-autoprefixer');
+var concat = require('gulp-concat');
+var connect = require('gulp-connect');
+var minifycss = require('gulp-minify-css');
+var plumber = require('gulp-plumber');
+var sass = require('gulp-sass');
+var uglify = require('gulp-uglify');
+
+// copy index.html and favicon
+gulp.task('copy', function() {
+    gulp.src('src/favicon.ico')
+        .pipe(gulp.dest('dist'));
+    gulp.src('src/index.html')
+        .pipe(gulp.dest('dist'));
 });
+
+// Compile Sass
+gulp.task('sass', function() {
+  gulp.src(['src/components/**/*.scss'])
+    .pipe(plumber())
+    .pipe(sass())
+    .pipe(autoprefix())
+    .pipe(concat('trendtrend.css'))
+    // .pipe(minifycss())
+    .pipe(gulp.dest("dist/assets"))
+    .pipe(connect.reload())
+});
+
+// connect
+gulp.task('connect', function() {
+    connect.server({
+        root: 'dist',
+        port: 8000,
+        livereload: true
+    });
+});
+
+// Watch files
+gulp.task('watch', function(event) {
+  gulp.watch(['src/components/**/*.scss'], ['sass'])
+});
+
+gulp.task('default', ['connect', 'watch'])
