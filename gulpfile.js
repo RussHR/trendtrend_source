@@ -5,12 +5,14 @@ var gulp = require('gulp');
 
 // gulp modules
 var autoprefix = require('gulp-autoprefixer');
-var babel = require('gulp-babel');
+var babelify = require('babelify');
+var browserify = require('browserify');
 var concat = require('gulp-concat');
 var connect = require('gulp-connect');
 var minifycss = require('gulp-minify-css');
 var plumber = require('gulp-plumber');
 var sass = require('gulp-sass');
+var source = require('vinyl-source-stream');
 var uglify = require('gulp-uglify');
 
 // copy index.html and favicon
@@ -36,9 +38,14 @@ gulp.task('sass', function() {
 
 // compile es6/jsx
 gulp.task('scripts', function() {
-    gulp.src(['src/index.jsx', 'src/components/**/*.jsx'])
-        .pipe(plumber())
-        .pipe(babel())
+    browserify({
+        entries: 'src/index.jsx',
+        extensions: ['.jsx'],
+        debug: true
+    })
+        .transform(babelify)
+        .bundle()
+        .pipe(source('index.js'))
         .pipe(gulp.dest('dist/assets'))
         .pipe(connect.reload());
 });
