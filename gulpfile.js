@@ -39,7 +39,6 @@ gulp.task('scripts', function() {
     gulp.src(['src/index.jsx', 'src/components/**/*.jsx'])
         .pipe(plumber())
         .pipe(babel())
-        .pipe(react())
         .pipe(gulp.dest('dist/assets'));
 });
 
