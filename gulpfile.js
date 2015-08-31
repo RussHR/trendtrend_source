@@ -10,6 +10,7 @@ var concat = require('gulp-concat');
 var connect = require('gulp-connect');
 var minifycss = require('gulp-minify-css');
 var plumber = require('gulp-plumber');
+var react = require('gulp-react');
 var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 
@@ -38,6 +39,7 @@ gulp.task('scripts', function() {
     gulp.src(['src/index.jsx', 'src/components/**/*.jsx'])
         .pipe(plumber())
         .pipe(babel())
+        .pipe(react())
         .pipe(gulp.dest('dist/assets'));
 });
 

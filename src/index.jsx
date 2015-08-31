@@ -1,11 +1,7 @@
-// hello-world.jsx
- 
-import React from 'react';
- 
 class HelloWorld extends React.Component {
   render() {
     return <p>Hello, world!</p>;
   }
 }
  
-export default HelloWorld;
+React.render(<HelloWorld />, document.getElementById('content'));
