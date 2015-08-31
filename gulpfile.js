@@ -5,6 +5,7 @@ var gulp = require('gulp');
 
 // gulp modules
 var autoprefix = require('gulp-autoprefixer');
+var babel = require('gulp-babel');
 var concat = require('gulp-concat');
 var connect = require('gulp-connect');
 var minifycss = require('gulp-minify-css');
@@ -20,7 +21,7 @@ gulp.task('copy', function() {
         .pipe(gulp.dest('dist'));
 });
 
-// Compile Sass
+// compile Sass
 gulp.task('sass', function() {
   gulp.src(['src/components/**/*.scss'])
     .pipe(plumber())
@@ -29,7 +30,15 @@ gulp.task('sass', function() {
     .pipe(concat('trendtrend.css'))
     // .pipe(minifycss())
     .pipe(gulp.dest("dist/assets"))
-    .pipe(connect.reload())
+    .pipe(connect.reload());
+});
+
+// compile es6/jsx
+gulp.task('scripts', function() {
+    gulp.src(['src/index.jsx', 'src/components/**/*.jsx'])
+        .pipe(plumber())
+        .pipe(babel())
+        .pipe(gulp.dest('dist/assets'));
 });
 
 // connect
@@ -43,7 +52,7 @@ gulp.task('connect', function() {
 
 // Watch files
 gulp.task('watch', function(event) {
-  gulp.watch(['src/components/**/*.scss'], ['sass'])
+  gulp.watch(['src/components/**/*.scss'], ['sass']);
 });
 
 gulp.task('default', ['connect', 'watch'])
