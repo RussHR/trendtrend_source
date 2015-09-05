@@ -66,4 +66,4 @@ gulp.task('watch', function(event) {
   gulp.watch(['src/**/*.jsx'], ['scripts']);
 });
 
-gulp.task('default', ['connect', 'watch'])
+gulp.task('default', ['connect', 'watch']);
