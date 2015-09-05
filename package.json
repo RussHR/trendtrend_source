@@ -34,6 +34,6 @@
   "dependencies": {
     "browser-request": "^0.3.3",
     "react": "^0.13.3",
-    "tumblr.js": "0.0.5"
+    "superagent-jsonp": "0.0.5"
   }
 }
