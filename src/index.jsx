@@ -1,4 +1,7 @@
 import React from 'react';
+import superagent from 'superagent';
+import superagentJSONP from 'superagent-jsonp';
+superagentJSONP(superagent);
 
 class HelloWorld extends React.Component {
     render() {
@@ -8,4 +11,6 @@ class HelloWorld extends React.Component {
  
 React.render(<HelloWorld />, document.getElementById('content'));
 
-// srSUAuHBEN6yZPG4p8N8LaYD8lp5vGIS9mBYOVnx8bA7xa6mpz
+superagent.get('https://api.tumblr.com/v2/tagged?tag=lol&api_key=srSUAuHBEN6yZPG4p8N8LaYD8lp5vGIS9mBYOVnx8bA7xa6mpz').jsonp().end(function(){
+  debugger; 
+});
