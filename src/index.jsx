@@ -81,6 +81,7 @@ class TrendtrendApp extends React.Component {
                 key={ i } />
             );
         });
+        return images;
     }
 
     incrementLoadedImageCount() {
