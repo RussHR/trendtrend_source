@@ -6,8 +6,9 @@ superagentJSONP(superagent);
 class TrendtrendApp extends React.Component {
 
     state ={
-        imageSrcs: []
+        imageSrcsFetched: false
     };
+    imageSrcs = [];
 
     searchByTag(e) {
         e.preventDefault();
@@ -24,33 +25,35 @@ class TrendtrendApp extends React.Component {
             })
             .jsonp()
             .end((err, res) => {
-                let imageSrcs = [];
                 let tumblrPosts = res.body.response;
                 for (let postI = 0; postI < tumblrPosts.length; postI++) {
                     let postPhotos = tumblrPosts[postI].photos;
                     if (postPhotos !== undefined) {
                         for (let photoI = 0; photoI < postPhotos.length; photoI++) {
-                            imageSrcs.push(postPhotos[photoI].original_size.url);
-                            if (imageSrcs.length >= 20) break;
+                            self.imageSrcs.push(postPhotos[photoI].original_size.url);
+                            if (self.imageSrcs.length >= 20) break;
                         }
-                        if (imageSrcs.length >= 20) break;
+                        if (self.imageSrcs.length >= 20) break;
                     }
                 }
-                self.setState({ imageSrcs: imageSrcs });
+                self.setState({ imageSrcsFetched: true });
             });
     }
 
     loadImages() {
-        let images = this.state.imageSrcs.map((imageSrc) => {
+        let images = this.imageSrcs.map((imageSrc, i) => {
             return (
-                <img src={imageSrc} onLoad={ () => {console.log('loaded')} } />
+                <img 
+                src={ imageSrc } 
+                key={ i } 
+                onLoad={ () => {console.log('loaded')} } />
             );
         });
         return images;
     }
 
     render() {
-        let images = this.state.imageSrcs.length > 0 ? this.loadImages() : null;
+        let images = this.state.imageSrcsFetched ? this.loadImages() : null;
         return (
             <div>
                 <form className="commentForm" onSubmit={ ::this.searchByTag }>
