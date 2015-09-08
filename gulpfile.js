@@ -37,14 +37,18 @@ gulp.task('sass', function() {
 });
 
 // compile es6/jsx
-gulp.task('scripts', function() {
+gulp.task('js', function() {
     browserify({
         entries: 'src/index.jsx',
         extensions: ['.jsx'],
         debug: true
     })
-        .transform(babelify)
+        .transform(babelify.configure({ stage: 0 }))
         .bundle()
+        .on('error', function (err) {
+            console.log(err.toString());
+            this.emit("end");
+        })
         .pipe(source('index.js'))
         .pipe(gulp.dest('dist/assets'))
         .pipe(connect.reload());
@@ -63,7 +67,7 @@ gulp.task('connect', function() {
 gulp.task('watch', function(event) {
   gulp.watch(['src/components/**/*.scss'], ['sass']);
   gulp.watch(['src/index.html', 'favicon.ico'], ['copy']);
-  gulp.watch(['src/**/*.jsx'], ['scripts']);
+  gulp.watch(['src/**/*.jsx'], ['js']);
 });
 
 gulp.task('default', ['connect', 'watch']);
