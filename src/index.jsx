@@ -6,9 +6,10 @@ superagentJSONP(superagent);
 class TrendtrendApp extends React.Component {
 
     state ={
-        imageSrcsFetched: false
+        currentPhase: 'askingForTag',
     };
     imageSrcs = [];
+    loadedImageCount = 0;
 
     searchByTag(e) {
         e.preventDefault();
@@ -21,6 +22,7 @@ class TrendtrendApp extends React.Component {
         superagent.get('https://api.tumblr.com/v2/tagged')
             .query({
                 tag: tag,
+                before: beforeTime,
                 api_key: 'srSUAuHBEN6yZPG4p8N8LaYD8lp5vGIS9mBYOVnx8bA7xa6mpz' 
             })
             .jsonp()
@@ -29,6 +31,7 @@ class TrendtrendApp extends React.Component {
                 if (tumblrPosts.errors || err) {
                     // there was an error such as a tag not being supplied
                     console.log('sorry, there was an error!');
+                    self.setState({ currentPhase: 'askingForTag' });
                 } else {
                     for (let postI = 0; postI < tumblrPosts.length; postI++) {
                         let postPhotos = tumblrPosts[postI].photos;
@@ -44,15 +47,15 @@ class TrendtrendApp extends React.Component {
                         }
                     }                    
                 }
-
                 if (this.imageSrcs.length >= 20) {
-                    self.setState({ imageSrcsFetched: true });                    
+                    self.setState({ currentPhase: 'fetchingImages' });                    
                 } else if (tumblrPosts.length === 20) {
                     let searchBeforeTime = tumblrPosts[19].timestamp
                     self.retrievePosts.call(self, tag, searchBeforeTime);
                 } else {
                     // there aren't enough posts to find
                     console.log('sorry, there are not enough posts with that tag');
+                    self.setState({ currentPhase: 'askingForTag' });  
                 }
             });
     }
@@ -63,21 +66,55 @@ class TrendtrendApp extends React.Component {
                 <img 
                 src={ imageSrc } 
                 key={ i } 
-                onLoad={ () => {console.log('loaded')} } />
+                onLoad={ ::this.incrementLoadedImageCount }
+                style={{ display: 'none' }} />
             );
         });
         return images;
     }
 
+    showImages() {
+        let images = this.imageSrcs.map((imageSrc, i) => {
+            return (
+                <img 
+                src={ imageSrc } 
+                key={ i } />
+            );
+        });
+    }
+
+    incrementLoadedImageCount() {
+        this.loadedImageCount += 1;
+        console.log(this.loadedImageCount);
+        if (this.loadedImageCount >= 20) {
+            this.setState({ currentPhase: 'showingImages' });
+        }
+    }
+
+    phaseToHtml() {
+        switch (this.state.currentPhase) {
+            case 'askingForTag':
+                return (
+                    <form onSubmit={ ::this.searchByTag }>
+                        <input type="text" placeholder="Tag to search" ref="tag" />
+                        <input type="submit" value="Search Posts" />
+                    </form>
+                );
+            case 'fetchingImages':
+                return this.loadImages();
+            case 'showingImages':
+                return this.showImages();
+            default:
+                return (<div />);
+
+        }
+    }
+
     render() {
-        let images = this.state.imageSrcsFetched ? this.loadImages() : null;
+        let htmlContent = this.phaseToHtml();
         return (
             <div>
-                <form className="commentForm" onSubmit={ ::this.searchByTag }>
-                    <input type="text" placeholder="Tag to search" ref="tag" />
-                    <input type="submit" value="Search Posts" />
-                </form>
-                { images }
+                { htmlContent }
             </div>
         );
     }
