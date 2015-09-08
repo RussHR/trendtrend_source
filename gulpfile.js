@@ -15,10 +15,8 @@ var sass = require('gulp-sass');
 var source = require('vinyl-source-stream');
 var uglify = require('gulp-uglify');
 
-// copy index.html and favicon
+// copy index.html
 gulp.task('copy', function() {
-    gulp.src('src/favicon.ico')
-        .pipe(gulp.dest('dist'));
     gulp.src('src/index.html')
         .pipe(gulp.dest('dist'))
         .pipe(connect.reload());
@@ -66,7 +64,7 @@ gulp.task('connect', function() {
 // Watch files
 gulp.task('watch', function(event) {
   gulp.watch(['src/components/**/*.scss'], ['sass']);
-  gulp.watch(['src/index.html', 'favicon.ico'], ['copy']);
+  gulp.watch(['src/index.html'], ['copy']);
   gulp.watch(['src/**/*.jsx'], ['js']);
 });
 
