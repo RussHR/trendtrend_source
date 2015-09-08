@@ -1,9 +1,10 @@
-import React           from 'react';
-import superagent      from 'superagent';
-import superagentJSONP from 'superagent-jsonp';
+import React, { Component }  from 'react';
+import superagent            from 'superagent';
+import superagentJSONP       from 'superagent-jsonp';
 superagentJSONP(superagent);
+import ImageAnimationHandler from './components/ImageAnimationHandler';
 
-class TrendtrendApp extends React.Component {
+class TrendtrendApp extends Component {
 
     state ={
         currentPhase: 'askingForTag',
@@ -73,22 +74,11 @@ class TrendtrendApp extends React.Component {
         return images;
     }
 
-    showImages() {
-        let images = this.imageSrcs.map((imageSrc, i) => {
-            return (
-                <img 
-                src={ imageSrc } 
-                key={ i } />
-            );
-        });
-        return images;
-    }
-
     incrementLoadedImageCount() {
         this.loadedImageCount += 1;
         console.log(this.loadedImageCount);
         if (this.loadedImageCount >= 20) {
-            this.setState({ currentPhase: 'showingImages' });
+            this.setState({ currentPhase: 'playingAnimation' });
         }
     }
 
@@ -103,8 +93,8 @@ class TrendtrendApp extends React.Component {
                 );
             case 'fetchingImages':
                 return this.loadImages();
-            case 'showingImages':
-                return this.showImages();
+            case 'playingAnimation':
+                return <ImageAnimationHandler imageSrcs={ this.imageSrcs } />;
             default:
                 return (<div />);
 
