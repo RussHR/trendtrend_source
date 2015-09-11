@@ -1,5 +1,6 @@
-import React, { Component }  from 'react';
+import React, { Component, PropTypes }  from 'react';
 import { connect }           from 'react-redux';
+import { requestTagPhase, findAssetsPhase, loadAssetsPhase, playAnimationPhase } from './actions';
 import superagent            from 'superagent';
 import superagentJSONP       from 'superagent-jsonp';
 superagentJSONP(superagent);
@@ -9,7 +10,14 @@ import ImageAnimationHandler from './components/ImageAnimationHandler';
   appPhase: state.appPhase
 }))
 export default class TrendtrendApp extends Component {
-
+    static propTypes = {
+        appPhase: PropTypes.oneOf([
+            'request tag',
+            'find assets',
+            'load assets',
+            'play animation'
+        ]).isRequired
+    };
     state ={
         currentPhase: 'askingForTag',
     };
@@ -106,7 +114,6 @@ export default class TrendtrendApp extends Component {
     }
 
     render() {
-        debugger;
         let htmlContent = this.phaseToHtml();
         return (
             <div>

@@ -6,10 +6,9 @@ export function requestTag() {
   };
 }
 
-export function findAssets(tag) {  
+export function findAssets() {  
   return {
-    type: types.FIND_ASSETS,
-    payload: { tag }
+    type: types.FIND_ASSETS
   };
 }
 
@@ -19,9 +18,8 @@ export function loadAssets() {
   };
 }
 
-export function playAnimation(imageSrcs) {  
+export function playAnimation() {  
   return {
-    type: types.PLAY_ANIMATION,
-    payload: { imageSrcs }
+    type: types.PLAY_ANIMATION
   };
 }
