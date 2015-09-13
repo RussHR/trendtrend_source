@@ -17,7 +17,10 @@ export default class TrendtrendApp extends Component {
         ]).isRequired,
         imageSrcs: PropTypes.array.isRequired
     };
-    loadedImageCount = 0;
+    state = {
+        loadedImageCount: 0
+    };
+
     searchByTag(e) {
         e.preventDefault();
         const tag = React.findDOMNode(this.refs.tag).value.trim();
@@ -37,15 +40,22 @@ export default class TrendtrendApp extends Component {
                 style={{ display: 'none' }} />
             );
         });
-        return (<div>{images}</div>);
+        return (
+            <div>
+                <span>Loaded Image Count: { this.state.loadedImageCount }/20</span>
+                {images}
+            </div>
+        );
     }
 
     incrementLoadedImageCount() {
-        this.loadedImageCount += 1;
-        console.log(this.loadedImageCount);
-        if (this.loadedImageCount >= 20) {
-            this.props.dispatch(ActionCreators.playAnimationPhase());
-        }
+        const { loadedImageCount } = this.state;
+        this.setState({ loadedImageCount: (loadedImageCount + 1) }, () => {
+            console.log(this.state.loadedImageCount);
+            if (this.state.loadedImageCount >= 20) {
+                this.props.dispatch(ActionCreators.playAnimationPhase());
+            }            
+        });
     }
 
     render() {
@@ -58,6 +68,8 @@ export default class TrendtrendApp extends Component {
                         <input type="submit" value="Search Posts" />
                     </form>
                 );
+            case 'find assets':
+                return (<span>Finding images...</span>);
             case 'load assets':
                 return this.loadImages();
             case 'play animation':
