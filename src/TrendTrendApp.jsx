@@ -1,6 +1,6 @@
 import React, { Component, PropTypes }  from 'react';
 import { connect }           from 'react-redux';
-import { requestTagPhase, findAssetsPhase, loadAssetsPhase, playAnimationPhase } from './actions';
+import { requestTag, findAssets, loadAssets, playAnimation } from './actions';
 import superagent            from 'superagent';
 import superagentJSONP       from 'superagent-jsonp';
 superagentJSONP(superagent);
@@ -26,8 +26,11 @@ export default class TrendtrendApp extends Component {
 
     searchByTag(e) {
         e.preventDefault();
-        let tag = React.findDOMNode(this.refs.tag).value.trim();
-        if (tag) this.retrievePosts(tag);
+        const tag = React.findDOMNode(this.refs.tag).value.trim();
+        if (tag) {
+            this.props.dispatch(findAssets());
+            this.retrievePosts(tag);
+        }
     }
 
     retrievePosts(tag, beforeTime = (Date.parse(new Date())/1000)) {
@@ -61,7 +64,8 @@ export default class TrendtrendApp extends Component {
                     }                    
                 }
                 if (this.imageSrcs.length >= 20) {
-                    self.setState({ currentPhase: 'fetchingImages' });                    
+                    self.setState({ currentPhase: 'fetchingImages' });
+                    this.props.dispatch(loadAssets());
                 } else if (tumblrPosts.length === 20) {
                     let searchBeforeTime = tumblrPosts[19].timestamp
                     self.retrievePosts.call(self, tag, searchBeforeTime);
@@ -91,6 +95,7 @@ export default class TrendtrendApp extends Component {
         console.log(this.loadedImageCount);
         if (this.loadedImageCount >= 20) {
             this.setState({ currentPhase: 'playingAnimation' });
+            this.props.dispatch(playAnimation());
         }
     }
 
@@ -114,7 +119,8 @@ export default class TrendtrendApp extends Component {
     }
 
     render() {
-        let htmlContent = this.phaseToHtml();
+        console.log(this.props.appPhase);
+        const htmlContent = this.phaseToHtml();
         return (
             <div>
                 { htmlContent }

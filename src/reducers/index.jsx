@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import * as types          from '../constants/ActionTypes';
 
-export default function appPhase(state = 'request tag', action) {
+function appPhase(state = 'request tag', action) {
     switch (action.type) {
         case types.REQUEST_TAG:
             return 'request tag'
