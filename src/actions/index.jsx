@@ -57,14 +57,14 @@ function retrievePosts(tag, beforeTime = (Date.parse(new Date())/1000), prevImag
                 }                    
                 if (imageSrcs.length >= 20) {
                     dispatch(loadAssets(imageSrcs));
-                    dispatch(loadAssetsPhase()); // must come after loadAssets
+                    return dispatch(loadAssetsPhase()); // must come after loadAssets
                 } else if (tumblrPosts.length === 20) {
                     const searchBeforeTime = tumblrPosts[19].timestamp;
-                    dispatch(retrievePosts(tag, searchBeforeTime, imageSrcs));
+                    return dispatch(retrievePosts(tag, searchBeforeTime, imageSrcs));
                 } else {
                     // there aren't enough posts to find
                     console.log('sorry, there are not enough posts with that tag');
-                    dispatch(requestTagPhase());
+                    return dispatch(requestTagPhase());
                 }
             });
     }
