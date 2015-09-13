@@ -18,9 +18,6 @@ export default class TrendtrendApp extends Component {
             'play animation'
         ]).isRequired
     };
-    state ={
-        currentPhase: 'askingForTag',
-    };
     imageSrcs = [];
     loadedImageCount = 0;
 
@@ -47,7 +44,7 @@ export default class TrendtrendApp extends Component {
                 if (tumblrPosts.errors || err) {
                     // there was an error such as a tag not being supplied
                     console.log('sorry, there was an error!');
-                    self.setState({ currentPhase: 'askingForTag' });
+                    this.props.dispatch(requestTag());
                 } else {
                     for (let postI = 0; postI < tumblrPosts.length; postI++) {
                         let postPhotos = tumblrPosts[postI].photos;
@@ -64,7 +61,6 @@ export default class TrendtrendApp extends Component {
                     }                    
                 }
                 if (this.imageSrcs.length >= 20) {
-                    self.setState({ currentPhase: 'fetchingImages' });
                     this.props.dispatch(loadAssets());
                 } else if (tumblrPosts.length === 20) {
                     let searchBeforeTime = tumblrPosts[19].timestamp
@@ -72,7 +68,7 @@ export default class TrendtrendApp extends Component {
                 } else {
                     // there aren't enough posts to find
                     console.log('sorry, there are not enough posts with that tag');
-                    self.setState({ currentPhase: 'askingForTag' });  
+                    this.props.dispatch(requestTag());
                 }
             });
     }
@@ -87,44 +83,34 @@ export default class TrendtrendApp extends Component {
                 style={{ display: 'none' }} />
             );
         });
-        return images;
+        return (<div>{images}</div>);
     }
 
     incrementLoadedImageCount() {
         this.loadedImageCount += 1;
         console.log(this.loadedImageCount);
         if (this.loadedImageCount >= 20) {
-            this.setState({ currentPhase: 'playingAnimation' });
             this.props.dispatch(playAnimation());
         }
     }
 
-    phaseToHtml() {
-        switch (this.state.currentPhase) {
-            case 'askingForTag':
+    render() {
+        const { appPhase } = this.props;
+        
+        switch (appPhase) {
+            case 'request tag':
                 return (
                     <form onSubmit={ ::this.searchByTag }>
                         <input type="text" placeholder="Tag to search" ref="tag" />
                         <input type="submit" value="Search Posts" />
                     </form>
                 );
-            case 'fetchingImages':
+            case 'load assets':
                 return this.loadImages();
-            case 'playingAnimation':
+            case 'play animation':
                 return <ImageAnimationHandler imageSrcs={ this.imageSrcs } />;
             default:
                 return (<div />);
-
         }
-    }
-
-    render() {
-        console.log(this.props.appPhase);
-        const htmlContent = this.phaseToHtml();
-        return (
-            <div>
-                { htmlContent }
-            </div>
-        );
     }
 }
