@@ -1,6 +1,6 @@
 import React, { Component, PropTypes }  from 'react';
 import { connect }           from 'react-redux';
-import { requestTag, findAssets, loadAssets, playAnimation } from './actions';
+import * as ActionCreators   from './actions';
 import superagent            from 'superagent';
 import superagentJSONP       from 'superagent-jsonp';
 superagentJSONP(superagent);
@@ -25,7 +25,7 @@ export default class TrendtrendApp extends Component {
         e.preventDefault();
         const tag = React.findDOMNode(this.refs.tag).value.trim();
         if (tag) {
-            this.props.dispatch(findAssets());
+            this.props.dispatch(ActionCreators.findAssets());
             this.retrievePosts(tag);
         }
     }
@@ -44,7 +44,7 @@ export default class TrendtrendApp extends Component {
                 if (tumblrPosts.errors || err) {
                     // there was an error such as a tag not being supplied
                     console.log('sorry, there was an error!');
-                    this.props.dispatch(requestTag());
+                    this.props.dispatch(ActionCreators.requestTagPhase());
                 } else {
                     for (let postI = 0; postI < tumblrPosts.length; postI++) {
                         let postPhotos = tumblrPosts[postI].photos;
@@ -61,14 +61,14 @@ export default class TrendtrendApp extends Component {
                     }                    
                 }
                 if (this.imageSrcs.length >= 20) {
-                    this.props.dispatch(loadAssets());
+                    this.props.dispatch(ActionCreators.loadAssetsPhase());
                 } else if (tumblrPosts.length === 20) {
                     let searchBeforeTime = tumblrPosts[19].timestamp
                     self.retrievePosts.call(self, tag, searchBeforeTime);
                 } else {
                     // there aren't enough posts to find
                     console.log('sorry, there are not enough posts with that tag');
-                    this.props.dispatch(requestTag());
+                    this.props.dispatch(ActionCreators.requestTagPhase());
                 }
             });
     }
@@ -90,7 +90,7 @@ export default class TrendtrendApp extends Component {
         this.loadedImageCount += 1;
         console.log(this.loadedImageCount);
         if (this.loadedImageCount >= 20) {
-            this.props.dispatch(playAnimation());
+            this.props.dispatch(ActionCreators.playAnimationPhase());
         }
     }
 
