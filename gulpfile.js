@@ -5,15 +5,15 @@ var gulp = require('gulp');
 
 // gulp modules
 var autoprefix = require('gulp-autoprefixer');
-var babelify = require('babelify');
+var babelify   = require('babelify');
 var browserify = require('browserify');
-var concat = require('gulp-concat');
-var connect = require('gulp-connect');
-var minifycss = require('gulp-minify-css');
-var plumber = require('gulp-plumber');
-var sass = require('gulp-sass');
-var source = require('vinyl-source-stream');
-var uglify = require('gulp-uglify');
+var concat     = require('gulp-concat');
+var connect    = require('gulp-connect');
+var minifycss  = require('gulp-minify-css');
+var plumber    = require('gulp-plumber');
+var sass       = require('gulp-sass');
+var source     = require('vinyl-source-stream');
+var uglify     = require('gulp-uglify');
 
 // copy index.html
 gulp.task('copy', function() {
@@ -24,7 +24,7 @@ gulp.task('copy', function() {
 
 // compile Sass
 gulp.task('sass', function() {
-  gulp.src(['src/**/*.scss'])
+  gulp.src(['src/styles/reset.scss', 'src/**/*.scss'])
     .pipe(plumber())
     .pipe(sass())
     .pipe(autoprefix())
@@ -63,7 +63,7 @@ gulp.task('connect', function() {
 
 // Watch files
 gulp.task('watch', function(event) {
-  gulp.watch(['src/components/**/*.scss'], ['sass']);
+  gulp.watch(['src/**/*.scss'], ['sass']);
   gulp.watch(['src/index.html'], ['copy']);
   gulp.watch(['src/**/*.jsx'], ['js']);
 });
