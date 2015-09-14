@@ -2,7 +2,7 @@ import React, { Component, PropTypes }  from 'react';
 import { connect }                      from 'react-redux';
 import * as ActionCreators              from './actions';
 import ImageAnimationHandler            from './components/ImageAnimationHandler';
-import RequestTagForm                   from './components/RequestTagForm';
+import RequestTagSection                from './components/RequestTagSection';
 
 @connect(state => ({
   appPhase: state.appPhase,
@@ -44,7 +44,6 @@ export default class TrendtrendApp extends Component {
     incrementLoadedImageCount() {
         const { loadedImageCount } = this.state;
         this.setState({ loadedImageCount: (loadedImageCount + 1) }, () => {
-            console.log(this.state.loadedImageCount);
             if (this.state.loadedImageCount >= 20) {
                 this.props.dispatch(ActionCreators.playAnimationPhase());
             }            
@@ -56,7 +55,7 @@ export default class TrendtrendApp extends Component {
         switch (appPhase) {
             case 'request tag':
                 return (
-                    <RequestTagForm dispatch={ dispatch } />
+                    <RequestTagSection dispatch={ dispatch } />
                 );
             case 'find assets':
                 return (<span>Finding images...</span>);

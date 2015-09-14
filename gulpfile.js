@@ -24,7 +24,7 @@ gulp.task('copy', function() {
 
 // compile Sass
 gulp.task('sass', function() {
-  gulp.src(['src/styles/reset.scss', 'src/**/*.scss'])
+  gulp.src(['src/styles/reset.scss', 'src/**/*.scss', '!src/styles/_mixins.scss'])
     .pipe(plumber())
     .pipe(sass())
     .pipe(autoprefix())

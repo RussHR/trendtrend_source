@@ -16,10 +16,13 @@ export default class RequestTagForm extends Component {
 
     render() {
         return (
-            <form className="request-tag-form" onSubmit={ ::this.searchByTag }>
-                <input type="text" placeholder="Tag to search" ref="tag" />
-                <input type="submit" value="Search Posts" />
-            </form>
+            <div className="request-tag-section">
+                <h1>trendtrend</h1>
+                <form className="request-tag-form" onSubmit={ ::this.searchByTag }>
+                    <input type="text" placeholder="Tag to search" ref="tag" />
+                    <input type="submit" value="Search Posts" />
+                </form>
+            </div>
         );
     }
 }
