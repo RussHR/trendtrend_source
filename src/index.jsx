@@ -11,7 +11,7 @@ const store = createStoreWithMiddleware(mainReducer);
 export default class App extends Component {  
     render() {
         return (
-            <div>
+            <div id="content">
                 <Provider store={store}>
                     { () => <TrendtrendApp /> }
                 </Provider>
@@ -20,4 +20,4 @@ export default class App extends Component {
     }
 }
 
-React.render(<App />, document.getElementById('content'));
+React.render(<App />, document.body);

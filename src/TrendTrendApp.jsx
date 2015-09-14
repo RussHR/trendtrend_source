@@ -1,7 +1,8 @@
 import React, { Component, PropTypes }  from 'react';
-import { connect }           from 'react-redux';
-import * as ActionCreators   from './actions';
-import ImageAnimationHandler from './components/ImageAnimationHandler';
+import { connect }                      from 'react-redux';
+import * as ActionCreators              from './actions';
+import ImageAnimationHandler            from './components/ImageAnimationHandler';
+import RequestTagForm                   from './components/RequestTagForm';
 
 @connect(state => ({
   appPhase: state.appPhase,
@@ -20,14 +21,6 @@ export default class TrendtrendApp extends Component {
     state = {
         loadedImageCount: 0
     };
-
-    searchByTag(e) {
-        e.preventDefault();
-        const tag = React.findDOMNode(this.refs.tag).value.trim();
-        if (tag) {
-            this.props.dispatch(ActionCreators.findAssets(tag));
-        }
-    }
 
     loadImages() {
         const { imageSrcs } = this.props;
@@ -59,14 +52,11 @@ export default class TrendtrendApp extends Component {
     }
 
     render() {
-        const { appPhase, imageSrcs } = this.props;
+        const { appPhase, imageSrcs, dispatch } = this.props;
         switch (appPhase) {
             case 'request tag':
                 return (
-                    <form onSubmit={ ::this.searchByTag }>
-                        <input type="text" placeholder="Tag to search" ref="tag" />
-                        <input type="submit" value="Search Posts" />
-                    </form>
+                    <RequestTagForm dispatch={ dispatch } />
                 );
             case 'find assets':
                 return (<span>Finding images...</span>);
