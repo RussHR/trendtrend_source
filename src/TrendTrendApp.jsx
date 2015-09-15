@@ -54,9 +54,7 @@ export default class TrendtrendApp extends Component {
         const { appPhase, imageSrcs, dispatch } = this.props;
         switch (appPhase) {
             case 'request tag':
-                return (
-                    <RequestTagSection dispatch={ dispatch } />
-                );
+                return (<RequestTagSection dispatch={ dispatch } />);
             case 'find assets':
                 return (<span>Finding images...</span>);
             case 'load assets':

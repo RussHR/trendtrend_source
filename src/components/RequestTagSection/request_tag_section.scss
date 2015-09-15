@@ -4,10 +4,36 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    font-size: 1rem;
     @include transform(translate(-50%, -50%));
+    font-size: 1rem;
+    text-align: center;
 
-    > h1 {
+    .app-title {
+        margin-bottom: 1em;
         font-size: 2.5em;
+    }
+
+    .request-tag-form {
+        .tag-field, .submit-tag {
+            border-radius: 5em;
+            font-family: 'Comfortaa', cursive;
+        }
+
+        .tag-field {
+            width: 100%;
+            padding: 0.2em 0.5em;
+            margin-bottom: 1em;
+            border-style: none;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .submit-tag {
+            padding: 0.5em;
+            border: 0.2em double white;
+            background-color: black;
+            color: white;
+            font-size: 1.5em;
+        }
     }
 }
