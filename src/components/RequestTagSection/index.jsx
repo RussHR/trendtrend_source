@@ -6,6 +6,10 @@ export default class RequestTagForm extends Component {
         dispatch: PropTypes.func.isRequired
     };
 
+    componentDidMount() {
+        findDOMNode(this.refs.tag).focus();
+    }
+
     searchByTag(e) {
         e.preventDefault();
         const tag = findDOMNode(this.refs.tag).value.trim();
@@ -24,6 +28,10 @@ export default class RequestTagForm extends Component {
                         search
                     </button>
                 </form>
+                <p className="disclaimer">
+                    WARNING: Random gifs from tumblr may be loaded. Those with a 
+                    sensitivity to flashing images should proceed with caution.
+                </p>
             </div>
         );
     }
