@@ -1,48 +1,37 @@
 @import '../../styles/_mixins';
 
-.request-tag-section {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    max-height: 100vh;
-    max-width: 100vw;
-    @include transform(translate(-50%, -50%));
-    font-size: 1rem;
-    text-align: center;
+.app-title {
+    margin-bottom: 1em;
+    font-size: 2.5em;
+}
 
-    .app-title {
+.request-tag-form {
+    margin-bottom: 2em;
+
+    .tag-field, .submit-tag {
+        border-radius: 5em;
+        font-family: 'Comfortaa', cursive;
+    }
+
+    .tag-field {
+        width: 100%;
+        padding: 0.2em 0.5em;
         margin-bottom: 1em;
-        font-size: 2.5em;
+        border-style: none;
+        font-size: 1.2em;
+        text-align: center;
     }
 
-    .request-tag-form {
-        margin-bottom: 2em;
-
-        .tag-field, .submit-tag {
-            border-radius: 5em;
-            font-family: 'Comfortaa', cursive;
-        }
-
-        .tag-field {
-            width: 100%;
-            padding: 0.2em 0.5em;
-            margin-bottom: 1em;
-            border-style: none;
-            font-size: 1.2em;
-            text-align: center;
-        }
-
-        .submit-tag {
-            padding: 0.5em;
-            border: 0.2em double white;
-            background-color: black;
-            color: white;
-            font-size: 1.5em;
-        }
+    .submit-tag {
+        padding: 0.5em;
+        border: 0.2em double white;
+        background-color: black;
+        color: white;
+        font-size: 1.5em;
     }
+}
 
-    .disclaimer {
-        font-size: 0.9em;
-        line-height: 1.1em;
-    }
+.disclaimer {
+    font-size: 0.9em;
+    line-height: 1.1em;
 }

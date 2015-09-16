@@ -1,5 +1,6 @@
 import React, { Component, PropTypes, findDOMNode }  from 'react';
 import * as ActionCreators                           from '../../actions';
+import ContentCenter                                 from '../ContentCenter';
 
 export default class RequestTagForm extends Component {
     static propTypes = {
@@ -20,7 +21,7 @@ export default class RequestTagForm extends Component {
 
     render() {
         return (
-            <div className="request-tag-section">
+            <ContentCenter>
                 <h1 className="app-title">trendtrend</h1>
                 <form className="request-tag-form" onSubmit={ ::this.searchByTag }>
                     <input className="tag-field" type="text" placeholder="tag to search" ref="tag" />
@@ -32,7 +33,7 @@ export default class RequestTagForm extends Component {
                     WARNING: Random gifs from tumblr may be loaded. Those with a 
                     sensitivity to flashing images should proceed with caution.
                 </p>
-            </div>
+            </ContentCenter>
         );
     }
 }
