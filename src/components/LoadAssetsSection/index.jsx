@@ -3,7 +3,13 @@ import ContentCenter        from '../ContentCenter';
 
 export default class LoadAssetsSection extends Component {
     static propTypes = {
-        imageSrcs: PropTypes.array.isRequired,
+        imageSrcs: (props, propName, componentName) => {
+            if (props[propName].length !== 20) {
+                return new Error(
+                    `imageSrcs requires 20 URLs. It only has ${ props[propName].length }.`
+                );
+            }
+        },
         loadedImageCount: PropTypes.number.isRequired,
         onLoadImage: PropTypes.func.isRequired
     };

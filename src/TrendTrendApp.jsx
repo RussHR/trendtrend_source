@@ -1,7 +1,7 @@
 import React, { Component, PropTypes }  from 'react';
 import { connect }                      from 'react-redux';
 import * as ActionCreators              from './actions';
-import FindingAssetsSection             from './components/FindingAssetsSection';
+import FindAssetsSection                from './components/FindAssetsSection';
 import ImageAnimationHandler            from './components/ImageAnimationHandler';
 import LoadAssetsSection                from './components/LoadAssetsSection';
 import RequestTagSection                from './components/RequestTagSection';
@@ -41,7 +41,7 @@ export default class TrendtrendApp extends Component {
             case 'request tag':
                 return (<RequestTagSection dispatch={ dispatch } />);
             case 'find assets':
-                return (<FindingAssetsSection />);
+                return (<FindAssetsSection />);
             case 'load assets':
                 return (<LoadAssetsSection imageSrcs={ imageSrcs } 
                                            loadedImageCount={ loadedImageCount } 
