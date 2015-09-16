@@ -3,6 +3,7 @@ import { connect }                      from 'react-redux';
 import * as ActionCreators              from './actions';
 import FindingAssetsSection             from './components/FindingAssetsSection';
 import ImageAnimationHandler            from './components/ImageAnimationHandler';
+import LoadAssetsSection                from './components/LoadAssetsSection';
 import RequestTagSection                from './components/RequestTagSection';
 
 @connect(state => ({
@@ -23,26 +24,7 @@ export default class TrendtrendApp extends Component {
         loadedImageCount: 0
     };
 
-    loadImages() {
-        const { imageSrcs } = this.props;
-        const images = imageSrcs.map((imageSrc, i) => {
-            return (
-                <img 
-                src={ imageSrc } 
-                key={ i } 
-                onLoad={ ::this.incrementLoadedImageCount }
-                style={{ display: 'none' }} />
-            );
-        });
-        return (
-            <div>
-                <span>Loaded Image Count: { this.state.loadedImageCount }/20</span>
-                {images}
-            </div>
-        );
-    }
-
-    incrementLoadedImageCount() {
+    onLoadImage() {
         const { loadedImageCount } = this.state;
         this.setState({ loadedImageCount: (loadedImageCount + 1) }, () => {
             if (this.state.loadedImageCount >= 20) {
@@ -53,13 +35,17 @@ export default class TrendtrendApp extends Component {
 
     render() {
         const { appPhase, imageSrcs, dispatch } = this.props;
+        const { loadedImageCount } = this.state;
+
         switch (appPhase) {
             case 'request tag':
                 return (<RequestTagSection dispatch={ dispatch } />);
             case 'find assets':
                 return (<FindingAssetsSection />);
             case 'load assets':
-                return this.loadImages();
+                return (<LoadAssetsSection imageSrcs={ imageSrcs } 
+                                           loadedImageCount={ loadedImageCount } 
+                                           onLoadImage={ ::this.onLoadImage } />);
             case 'play animation':
                 return <ImageAnimationHandler imageSrcs={ imageSrcs } />;
             default:
