@@ -11,7 +11,7 @@ export default class RequestTagForm extends Component {
         findDOMNode(this.refs.tag).focus();
     }
 
-    searchByTag(e) {
+    onSubmit(e) {
         e.preventDefault();
         const tag = findDOMNode(this.refs.tag).value.trim();
         if (tag) {
@@ -23,7 +23,7 @@ export default class RequestTagForm extends Component {
         return (
             <ContentCenter>
                 <h1 className="app-title">trendtrend</h1>
-                <form className="request-tag-form" onSubmit={ ::this.searchByTag }>
+                <form className="request-tag-form" onSubmit={ ::this.onSubmit }>
                     <input className="tag-field" type="text" placeholder="tag to search" ref="tag" />
                     <button className="submit-tag" type="submit">
                         search
