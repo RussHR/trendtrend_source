@@ -8,7 +8,8 @@ import RequestTagSection                from './components/RequestTagSection';
 
 @connect(state => ({
   appPhase: state.appPhase,
-  imageSrcs: state.imageSrcs
+  imageSrcs: state.imageSrcs,
+  routerState: state.router
 }))
 export default class TrendtrendApp extends Component {
     static propTypes = {

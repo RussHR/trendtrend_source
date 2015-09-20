@@ -1,5 +1,6 @@
-import { combineReducers } from 'redux';
-import * as types          from '../constants/ActionTypes';
+import { combineReducers }    from 'redux';
+import { routerStateReducer } from 'redux-router';
+import * as types             from '../constants/ActionTypes';
 
 function appPhase(state = 'request tag', action) {
     switch (action.type) {
@@ -25,5 +26,5 @@ function imageSrcs(state = [], action) {
     }
 }
 
-const mainReducer = combineReducers({ appPhase, imageSrcs });
+const mainReducer = combineReducers({ appPhase, imageSrcs, router: routerStateReducer });
 export default mainReducer;

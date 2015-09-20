@@ -1,14 +1,19 @@
 import React, { Component }             from 'react';  
-import { createStore, applyMiddleware } from 'redux';  
+import { createStore, applyMiddleware, compose } from 'redux';  
 import { Provider }                     from 'react-redux';
+import { reduxReactRouter } from 'redux-router';
 import thunk                            from 'redux-thunk';
 import TrendtrendApp                    from './TrendtrendApp';  
 import mainReducer                      from './reducers';
+import createHistory from 'history/lib/createBrowserHistory';
 
-const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+const createStoreWithMiddleware = compose(
+    applyMiddleware(thunk),
+    reduxReactRouter({ createHistory })
+)(createStore);
 const store = createStoreWithMiddleware(mainReducer);
 
-export default class App extends Component {  
+export default class Root extends Component {  
     render() {
         return (
             <div id="content">
@@ -20,4 +25,4 @@ export default class App extends Component {
     }
 }
 
-React.render(<App />, document.body);
+React.render(<Root />, document.body);
