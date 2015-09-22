@@ -3,7 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider }                     from 'react-redux';
 import thunk                            from 'redux-thunk';
 import { Router, Route, IndexRoute }    from 'react-router';
-import createBrowserHistory             from 'history/lib/createBrowserHistory';
+import createHashHistory                from 'history/lib/createHashHistory';
 
 import mainReducer                      from './reducers';
 
@@ -30,7 +30,7 @@ export default class Root extends Component {
     render() {
         return (
             <Provider store={store}>
-                { () => <Router history={ createBrowserHistory() } routes={ routes } /> }
+                { () => <Router history={ createHashHistory() } routes={ routes } /> }
             </Provider>
         );
     }
