@@ -1,21 +1,21 @@
 import React, { Component, PropTypes, findDOMNode }  from 'react';
-import * as ActionCreators                           from '../../actions';
 import ContentCenter                                 from '../ContentCenter';
 
-export default class RequestTagForm extends Component {
+export default class RequestTagSection extends Component {
     static propTypes = {
-        dispatch: PropTypes.func.isRequired
+        history: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        params: PropTypes.object.isRequired,
+        route: PropTypes.object.isRequired,
+        routeParams: PropTypes.object.isRequired,
+        routes: PropTypes.array.isRequired
     };
-
-    componentDidMount() {
-        findDOMNode(this.refs.tag).focus();
-    }
 
     onSubmit(e) {
         e.preventDefault();
         const tag = findDOMNode(this.refs.tag).value.trim();
         if (tag) {
-            this.props.dispatch(ActionCreators.findAssets(tag));
+            this.props.history.pushState(null, '/find-assets', { tag });
         }
     }
 
@@ -32,6 +32,8 @@ export default class RequestTagForm extends Component {
                 <p className="disclaimer">
                     WARNING: Random gifs from tumblr may be loaded. Those with a 
                     sensitivity to flashing images should proceed with caution.
+                    <br /><br />
+                    Make sure your speakers are adjusted.
                 </p>
             </ContentCenter>
         );

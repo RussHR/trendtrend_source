@@ -1,6 +1,12 @@
 import React, { Component, PropTypes } from 'react';
-import ContentCenter        from '../ContentCenter';
+import { connect }                     from 'react-redux';
+import * as ActionCreators             from '../../actions';
+import ContentCenter                   from '../ContentCenter';
 
+@connect(state => ({
+    imageSrcs: state.imageSrcs,
+    loadedImageCount: state.loadedImageCount
+}))
 export default class LoadAssetsSection extends Component {
     static propTypes = {
         imageSrcs: (props, propName, componentName) => {
@@ -11,17 +17,35 @@ export default class LoadAssetsSection extends Component {
             }
         },
         loadedImageCount: PropTypes.number.isRequired,
-        onLoadImage: PropTypes.func.isRequired
+        dispatch: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        params: PropTypes.object.isRequired,
+        route: PropTypes.object.isRequired,
+        routeParams: PropTypes.object.isRequired,
+        routes: PropTypes.array.isRequired
     };
-    render() {
-        const { imageSrcs, loadedImageCount, onLoadImage } = this.props;
 
+    componentWillReceiveProps(nextProps) {
+        const { loadedImageCount, history } = this.props;
+        if (loadedImageCount === 19 && nextProps.loadedImageCount == 20) {
+            history.pushState(null, '/play-animation');
+        }
+    }
+
+    incrementLoadedImages() {
+        const { dispatch, loadedImageCount } = this.props;
+        dispatch(ActionCreators.incrementLoadedImages(loadedImageCount));
+    }
+
+    render() {
+        const { imageSrcs, loadedImageCount } = this.props;
         const images = imageSrcs.map((imageSrc, i) => {
             return (
                 <img 
                 src={ imageSrc } 
                 key={ i } 
-                onLoad={ onLoadImage }
+                onLoad={ ::this.incrementLoadedImages }
                 style={{ display: 'none' }} />
             );
         });

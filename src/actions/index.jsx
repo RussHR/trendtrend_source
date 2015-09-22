@@ -3,28 +3,13 @@ import superagent      from 'superagent';
 import superagentJSONP from 'superagent-jsonp';
 superagentJSONP(superagent);
 
-// app phase
-export function requestTagPhase() {  
-    return { type: types.REQUEST_TAG_PHASE };
-}
-function findAssetsPhase() {  
-    return { type: types.FIND_ASSETS_PHASE };
-}
-export function loadAssetsPhase() {  
-    return { type: types.LOAD_ASSETS_PHASE };
-}
-export function playAnimationPhase() {  
-    return { type: types.PLAY_ANIMATION_PHASE };
-}
-
 // finding assets
-export function findAssets(tag) {
+export function findAssets(tag, history) {
     return (dispatch) => {
-        dispatch(findAssetsPhase());
-        dispatch(retrievePosts(tag));
+        dispatch(retrievePosts(tag, history));
     };
 }
-function retrievePosts(tag, beforeTime = (Date.parse(new Date())/1000), prevImageSrcs = []) {
+function retrievePosts(tag, history, beforeTime = (Date.parse(new Date())/1000), prevImageSrcs = []) {
     return (dispatch) => {
         let imageSrcs = prevImageSrcs;
         superagent.get('https://api.tumblr.com/v2/tagged')
@@ -39,7 +24,8 @@ function retrievePosts(tag, beforeTime = (Date.parse(new Date())/1000), prevImag
                 if (tumblrPosts.errors || err) {
                     // there was an error such as a tag not being supplied
                     console.log('sorry, there was an error!');
-                    return dispatch(requestTagPhase());
+                    history.pushState(null, '/');
+                    return;
                 }
                 
                 for (let postI = 0; postI < tumblrPosts.length; postI++) {
@@ -57,14 +43,16 @@ function retrievePosts(tag, beforeTime = (Date.parse(new Date())/1000), prevImag
                 }                    
                 if (imageSrcs.length >= 20) {
                     dispatch(loadAssets(imageSrcs));
-                    return dispatch(loadAssetsPhase()); // must come after loadAssets
+                    history.pushState(null, '/load-assets'); // must come after loadAssets
+                    return;
                 } else if (tumblrPosts.length === 20) {
                     const searchBeforeTime = tumblrPosts[19].timestamp;
-                    return dispatch(retrievePosts(tag, searchBeforeTime, imageSrcs));
+                    return dispatch(retrievePosts(tag, history, searchBeforeTime, imageSrcs));
                 } else {
                     // there aren't enough posts to find
                     console.log('sorry, there are not enough posts with that tag');
-                    return dispatch(requestTagPhase());
+                    history.pushState(null, '/');
+                    return;
                 }
             });
     }
@@ -75,5 +63,11 @@ function loadAssets(imageSrcs) {
     return {
         type: types.LOAD_ASSETS,
         payload: { imageSrcs }
+    }
+}
+export function incrementLoadedImages(loadedImageCount) {
+    return {
+        type: types.INCREMENT_LOADED_IMAGES,
+        payload: { loadedImageCount }
     }
 }
