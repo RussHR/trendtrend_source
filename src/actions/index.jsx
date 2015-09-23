@@ -3,6 +3,13 @@ import superagent      from 'superagent';
 import superagentJSONP from 'superagent-jsonp';
 superagentJSONP(superagent);
 
+// request tag
+export function goToRequestTag(history) {
+    return (dispatch) => {
+        history.pushState(null, '/');
+    };
+}
+
 // finding assets
 export function goToFindAssets(tag, history) {
     return (dispatch) => {
@@ -64,7 +71,6 @@ function loadAssets(imageSrcs) {
 }
 export function imageLoaded(loadedImageCount, history) {
     return (dispatch) => {
-        console.log(loadedImageCount);
         if (loadedImageCount === 19) {
             history.pushState(null, '/play-animation');
         } else {

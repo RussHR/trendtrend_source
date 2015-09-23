@@ -26,6 +26,11 @@ export default class LoadAssetsSection extends Component {
         routes: PropTypes.array.isRequired
     };
 
+    componentWillMount() {
+        const { imageSrcs, dispatch, history } = this.props;
+        if (imageSrcs.length < 20) dispatch(ActionCreators.goToRequestTag(history));
+    }
+
     incrementLoadedImages() {
         const { dispatch, loadedImageCount, history } = this.props;
         dispatch(ActionCreators.imageLoaded(loadedImageCount, history));
