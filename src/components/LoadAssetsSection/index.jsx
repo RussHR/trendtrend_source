@@ -26,16 +26,9 @@ export default class LoadAssetsSection extends Component {
         routes: PropTypes.array.isRequired
     };
 
-    componentWillReceiveProps(nextProps) {
-        const { loadedImageCount, history } = this.props;
-        if (loadedImageCount === 19 && nextProps.loadedImageCount == 20) {
-            history.pushState(null, '/play-animation');
-        }
-    }
-
     incrementLoadedImages() {
-        const { dispatch, loadedImageCount } = this.props;
-        dispatch(ActionCreators.incrementLoadedImages(loadedImageCount));
+        const { dispatch, loadedImageCount, history } = this.props;
+        dispatch(ActionCreators.imageLoaded(loadedImageCount, history));
     }
 
     render() {

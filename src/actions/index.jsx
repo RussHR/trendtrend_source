@@ -6,7 +6,6 @@ superagentJSONP(superagent);
 // finding assets
 export function findAssets(tag, history) {
     return (dispatch) => {
-        debugger
         history.pushState(null, '/find-assets', { tag });
         dispatch(retrievePosts(tag, history));
     };
@@ -64,7 +63,17 @@ function loadAssets(imageSrcs) {
         payload: { imageSrcs }
     }
 }
-export function incrementLoadedImages(loadedImageCount) {
+export function imageLoaded(loadedImageCount, history) {
+    return (dispatch) => {
+        console.log(loadedImageCount);
+        if (loadedImageCount === 19) {
+            history.pushState(null, '/play-animation');
+        } else {
+            dispatch(incrementLoadedImages(loadedImageCount));
+        }
+    }
+}
+function incrementLoadedImages(loadedImageCount) {
     return {
         type: types.INCREMENT_LOADED_IMAGES,
         payload: { loadedImageCount }
