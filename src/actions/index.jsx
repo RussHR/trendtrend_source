@@ -6,6 +6,8 @@ superagentJSONP(superagent);
 // finding assets
 export function findAssets(tag, history) {
     return (dispatch) => {
+        debugger
+        history.pushState(null, '/find-assets', { tag });
         dispatch(retrievePosts(tag, history));
     };
 }
@@ -24,8 +26,7 @@ function retrievePosts(tag, history, beforeTime = (Date.parse(new Date())/1000),
                 if (tumblrPosts.errors || err) {
                     // there was an error such as a tag not being supplied
                     console.log('sorry, there was an error!');
-                    history.pushState(null, '/');
-                    return;
+                    return history.pushState(null, '/');
                 }
                 
                 for (let postI = 0; postI < tumblrPosts.length; postI++) {
@@ -43,16 +44,14 @@ function retrievePosts(tag, history, beforeTime = (Date.parse(new Date())/1000),
                 }                    
                 if (imageSrcs.length >= 20) {
                     dispatch(loadAssets(imageSrcs));
-                    history.pushState(null, '/load-assets'); // must come after loadAssets
-                    return;
+                    return history.pushState(null, '/load-assets'); // must come after loadAssets
                 } else if (tumblrPosts.length === 20) {
                     const searchBeforeTime = tumblrPosts[19].timestamp;
                     return dispatch(retrievePosts(tag, history, searchBeforeTime, imageSrcs));
                 } else {
                     // there aren't enough posts to find
                     console.log('sorry, there are not enough posts with that tag');
-                    history.pushState(null, '/');
-                    return;
+                    return history.pushState(null, '/');
                 }
             });
     }

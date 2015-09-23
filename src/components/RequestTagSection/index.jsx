@@ -1,8 +1,12 @@
 import React, { Component, PropTypes, findDOMNode }  from 'react';
+import { connect }                                   from 'react-redux';
+import * as ActionCreators                           from '../../actions';
 import ContentCenter                                 from '../ContentCenter';
 
+@connect(state => ({}))
 export default class RequestTagSection extends Component {
     static propTypes = {
+        dispatch: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         location: PropTypes.object.isRequired,
         params: PropTypes.object.isRequired,
@@ -15,7 +19,8 @@ export default class RequestTagSection extends Component {
         e.preventDefault();
         const tag = findDOMNode(this.refs.tag).value.trim();
         if (tag) {
-            this.props.history.pushState(null, '/find-assets', { tag });
+            const { dispatch, history } = this.props;
+            dispatch(ActionCreators.findAssets(tag, history));
         }
     }
 

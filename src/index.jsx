@@ -20,9 +20,10 @@ const store = createStoreWithMiddleware(mainReducer);
 const routes = (
     <Route path="/" component={TrendtrendApp}>
         <IndexRoute component={RequestTagSection} />
-        <Route path="/find-assets" component={FindAssetsSection} />
-        <Route path="/load-assets" component={LoadAssetsSection} />
-        <Route path="/play-animation" component={ImageAnimationHandler} />
+        <Route path="find-assets" component={FindAssetsSection} />
+        <Route path="load-assets" component={LoadAssetsSection} />
+        <Route path="play-animation" component={ImageAnimationHandler} />
+        <Route path="*" component={RequestTagSection} />
     </Route>
 );
 
@@ -30,7 +31,7 @@ export default class Root extends Component {
     render() {
         return (
             <Provider store={store}>
-                { () => <Router history={ createHashHistory() } routes={ routes } /> }
+                { () => <Router history={ createHashHistory({ queryKey: false }) } routes={ routes } /> }
             </Provider>
         );
     }
