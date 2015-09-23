@@ -20,7 +20,7 @@ export default class RequestTagSection extends Component {
         const tag = findDOMNode(this.refs.tag).value.trim();
         if (tag) {
             const { dispatch, history } = this.props;
-            dispatch(ActionCreators.findAssets(tag, history));
+            dispatch(ActionCreators.goToFindAssets(tag, history));
         }
     }
 
@@ -38,7 +38,7 @@ export default class RequestTagSection extends Component {
                     WARNING: Random gifs from tumblr may be loaded. Those with a 
                     sensitivity to flashing images should proceed with caution.
                     <br /><br />
-                    Make sure your speakers are adjusted.
+                    Make sure your speakers are on and adjusted.
                 </p>
             </ContentCenter>
         );

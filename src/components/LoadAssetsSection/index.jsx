@@ -39,7 +39,7 @@ export default class LoadAssetsSection extends Component {
                 src={ imageSrc } 
                 key={ i } 
                 onLoad={ ::this.incrementLoadedImages }
-                style={{ display: 'none' }} />
+                className="loading-image" />
             );
         });
 

@@ -20,7 +20,7 @@ const store = createStoreWithMiddleware(mainReducer);
 const routes = (
     <Route path="/" component={TrendtrendApp}>
         <IndexRoute component={RequestTagSection} />
-        <Route path="find-assets" component={FindAssetsSection} />
+        <Route path="find-assets/:tag" component={FindAssetsSection} />
         <Route path="load-assets" component={LoadAssetsSection} />
         <Route path="play-animation" component={ImageAnimationHandler} />
         <Route path="*" component={RequestTagSection} />

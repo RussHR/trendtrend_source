@@ -4,13 +4,12 @@ import superagentJSONP from 'superagent-jsonp';
 superagentJSONP(superagent);
 
 // finding assets
-export function findAssets(tag, history) {
+export function goToFindAssets(tag, history) {
     return (dispatch) => {
-        history.pushState(null, '/find-assets', { tag });
-        dispatch(retrievePosts(tag, history));
+        history.pushState(null, `/find-assets/${ tag }`);
     };
 }
-function retrievePosts(tag, history, beforeTime = (Date.parse(new Date())/1000), prevImageSrcs = []) {
+export function retrievePosts(tag, history, beforeTime = (Date.parse(new Date())/1000), prevImageSrcs = []) {
     return (dispatch) => {
         let imageSrcs = prevImageSrcs;
         superagent.get('https://api.tumblr.com/v2/tagged')
