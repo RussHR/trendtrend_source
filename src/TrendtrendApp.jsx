@@ -1,7 +1,7 @@
 import React, { Component, PropTypes }  from 'react';
 import * as ActionCreators              from './actions';
 import FindAssetsSection                from './components/FindAssetsSection';
-import ImageAnimationHandler            from './components/ImageAnimationHandler';
+import ImageAnimationSection            from './components/ImageAnimationSection';
 import LoadAssetsSection                from './components/LoadAssetsSection';
 import RequestTagSection                from './components/RequestTagSection';
 

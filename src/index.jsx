@@ -11,7 +11,7 @@ import TrendtrendApp                    from './TrendtrendApp';
 import RequestTagSection                from './components/RequestTagSection';
 import FindAssetsSection                from './components/FindAssetsSection';
 import LoadAssetsSection                from './components/LoadAssetsSection';
-import ImageAnimationHandler            from './components/ImageAnimationHandler';
+import ImageAnimationSection            from './components/ImageAnimationSection';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(mainReducer);
@@ -22,7 +22,7 @@ const routes = (
         <IndexRoute component={RequestTagSection} />
         <Route path="find-assets/:tag" component={FindAssetsSection} />
         <Route path="load-assets" component={LoadAssetsSection} />
-        <Route path="play-animation" component={ImageAnimationHandler} />
+        <Route path="play-animation" component={ImageAnimationSection} />
         <Route path="*" component={RequestTagSection} />
     </Route>
 );

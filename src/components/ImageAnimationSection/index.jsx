@@ -5,7 +5,7 @@ import * as ActionCreators                           from '../../actions';
 @connect(state => ({
     imageSrcs: state.imageSrcs
 }))
-export default class ImageAnimationHandler extends React.Component {
+export default class ImageAnimationSection extends Component {
     static propTypes ={
         imageSrcs: (props, propName, componentName) => {
             if (props[propName].length !== 20) {

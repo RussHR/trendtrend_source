@@ -12,6 +12,8 @@ function imageSrcs(state = [], action) {
 
 function loadedImageCount(state = 0, action) {
     switch (action.type) {
+        case types.RESET_IMAGES:
+            return 0;
         case types.INCREMENT_LOADED_IMAGES:
             return action.payload.loadedImageCount + 1;
         default:

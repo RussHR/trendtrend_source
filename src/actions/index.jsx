@@ -9,6 +9,11 @@ export function goToRequestTag(history) {
         history.pushState(null, '/');
     };
 }
+export function resetImages() {
+    return {
+        type: types.RESET_IMAGES
+    }
+}
 
 // finding assets
 export function goToFindAssets(tag, history) {

@@ -15,6 +15,10 @@ export default class RequestTagSection extends Component {
         routes: PropTypes.array.isRequired
     };
 
+    componentDidMount() {
+        this.props.dispatch(ActionCreators.resetImages());
+    }
+
     onSubmit(e) {
         e.preventDefault();
         const tag = findDOMNode(this.refs.tag).value.trim();
