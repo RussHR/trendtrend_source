@@ -15,6 +15,10 @@ export default class FindAssetsSection extends Component {
         routes: PropTypes.array.isRequired
     };
 
+    componentWillMount() {
+        this.props.dispatch(ActionCreators.clearAssets());
+    }
+
     componentDidMount() {
         const { dispatch, params, history } = this.props;
         dispatch(ActionCreators.findAssets(params.tag, history));

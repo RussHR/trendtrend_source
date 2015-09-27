@@ -5,7 +5,8 @@ import ContentCenter                   from '../ContentCenter';
 
 @connect(state => ({
     imageSrcs: state.imageSrcs,
-    loadedImageCount: state.loadedImageCount
+    loadedImageCount: state.loadedImageCount,
+    track: state.track
 }))
 export default class LoadAssetsSection extends Component {
     static propTypes = {
