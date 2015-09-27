@@ -17,7 +17,7 @@ export default class FindAssetsSection extends Component {
 
     componentDidMount() {
         const { dispatch, params, history } = this.props;
-        dispatch(ActionCreators.retrievePosts(params.tag, history));
+        dispatch(ActionCreators.findAssets(params.tag, history));
     }
 
     render() {
