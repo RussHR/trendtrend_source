@@ -42,7 +42,11 @@ export function findAssets(tag, history) {
                     filter: 'public'
                 })
                 .end((err, res) => {
-                    resolve(res.body[0]);
+                    if (res.body.length === 0 || err) {
+                        reject('sorry, there was an error in getting the track');
+                    } else {
+                        resolve(res.body[0]);
+                    }
                 });
         });
 
