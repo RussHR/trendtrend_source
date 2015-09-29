@@ -18,6 +18,7 @@ export default class LoadAssetsSection extends Component {
             }
         },
         loadedImageCount: PropTypes.number.isRequired,
+        track: PropTypes.object.isRequired,
         dispatch: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         location: PropTypes.object.isRequired,
@@ -32,13 +33,36 @@ export default class LoadAssetsSection extends Component {
         if (imageSrcs.length < 20) dispatch(ActionCreators.goToRequestTag(history));
     }
 
+    componentDidMount() {
+        const audioContext = new AudioContext();
+        const audio = new Audio();
+        audio.crossOrigin = "anonymous";
+        audio.src = `${this.props.track.stream_url}?client_id=38dc81e57f5a4f5c7dc26fc5e5315b1e`;
+        const audioSrc = audioContext.createMediaElementSource(audio);
+        const analyser = audioContext.createAnalyser();
+        audioSrc.connect(analyser);
+        audioSrc.connect(audioContext.destination);
+        const bufferLength = analyser.frequencyBinCount; // 1024
+        const dataArray = new Uint8Array(bufferLength);
+
+        function renderFrame() {
+             requestAnimationFrame(renderFrame);
+
+             analyser.getByteFrequencyData(dataArray);
+             console.log(dataArray);
+        }
+        
+        audio.play();
+        renderFrame();
+    }
+
     incrementLoadedImages() {
         const { dispatch, loadedImageCount, history } = this.props;
         dispatch(ActionCreators.imageLoaded(loadedImageCount, history));
     }
 
     render() {
-        const { imageSrcs, loadedImageCount } = this.props;
+        const { imageSrcs, loadedImageCount, track } = this.props;
         const images = imageSrcs.map((imageSrc, i) => {
             return (
                 <img 
@@ -48,6 +72,7 @@ export default class LoadAssetsSection extends Component {
                 className="loading-image" />
             );
         });
+        // const trackAudio = <audio src={`${track.stream_url}?client_id=38dc81e57f5a4f5c7dc26fc5e5315b1e`} controls />;
 
         return (
             <ContentCenter>

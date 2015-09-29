@@ -119,10 +119,11 @@ function setImageSrcs(imageSrcs) {
     }
 }
 
+// loading assets
 export function imageLoaded(loadedImageCount, history) {
     return (dispatch) => {
         if (loadedImageCount === 19) {
-            history.pushState(null, '/play-animation');
+            // history.pushState(null, '/play-animation');
         } else {
             dispatch(incrementLoadedImages(loadedImageCount));
         }
