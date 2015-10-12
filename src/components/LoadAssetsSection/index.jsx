@@ -37,12 +37,12 @@ export default class LoadAssetsSection extends Component {
         const ContextClass = (window.AudioContext || window.webkitAudioContext);
         const audioContext = new ContextClass();
         const audio = new Audio();
-        // debugger
-        // audio.src = `${this.props.track.stream_url}?client_id=38dc81e57f5a4f5c7dc26fc5e5315b1e`;
-        // const audioSrc = audioContext.createMediaElementSource(audio);
+        audio.crossOrigin = "anonymous";
+        audio.src = this.props.tracks[0].preview_url;
+        const audioSrc = audioContext.createMediaElementSource(audio);
         // const analyser = audioContext.createAnalyser();
         // audioSrc.connect(analyser);
-        // audioSrc.connect(audioContext.destination);
+        audioSrc.connect(audioContext.destination);
         // const bufferLength = analyser.frequencyBinCount; // 1024
         // const dataArray = new Uint8Array(bufferLength);
 
@@ -53,7 +53,7 @@ export default class LoadAssetsSection extends Component {
         //      console.log(dataArray);
         // }
         
-        // audio.play();
+        audio.play();
         // renderFrame();
     }
 
