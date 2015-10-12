@@ -12,10 +12,10 @@ function imageSrcs(state = [], action) {
     }
 }
 
-function track(state = {}, action) {
+function tracks(state = [], action) {
     switch (action.type) {
-        case types.SET_TRACK:
-            return action.payload.track;
+        case types.SET_TRACKS:
+            return action.payload.tracks;
         default:
             return state;
     }
@@ -32,5 +32,5 @@ function loadedImageCount(state = 0, action) {
     }
 }
 
-const mainReducer = combineReducers({ imageSrcs, track, loadedImageCount });
+const mainReducer = combineReducers({ imageSrcs, tracks, loadedImageCount });
 export default mainReducer;

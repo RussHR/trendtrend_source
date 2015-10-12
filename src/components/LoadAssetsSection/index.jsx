@@ -6,7 +6,7 @@ import ContentCenter                   from '../ContentCenter';
 @connect(state => ({
     imageSrcs: state.imageSrcs,
     loadedImageCount: state.loadedImageCount,
-    track: state.track
+    tracks: state.tracks
 }))
 export default class LoadAssetsSection extends Component {
     static propTypes = {
@@ -18,7 +18,7 @@ export default class LoadAssetsSection extends Component {
             }
         },
         loadedImageCount: PropTypes.number.isRequired,
-        track: PropTypes.object.isRequired,
+        tracks: PropTypes.arrayOf(PropTypes.object.isRequired),
         dispatch: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         location: PropTypes.object.isRequired,
@@ -34,26 +34,27 @@ export default class LoadAssetsSection extends Component {
     }
 
     componentDidMount() {
-        const audioContext = new AudioContext();
+        const ContextClass = (window.AudioContext || window.webkitAudioContext);
+        const audioContext = new ContextClass();
         const audio = new Audio();
-        audio.crossOrigin = "anonymous";
-        audio.src = `${this.props.track.stream_url}?client_id=38dc81e57f5a4f5c7dc26fc5e5315b1e`;
-        const audioSrc = audioContext.createMediaElementSource(audio);
-        const analyser = audioContext.createAnalyser();
-        audioSrc.connect(analyser);
-        audioSrc.connect(audioContext.destination);
-        const bufferLength = analyser.frequencyBinCount; // 1024
-        const dataArray = new Uint8Array(bufferLength);
+        // debugger
+        // audio.src = `${this.props.track.stream_url}?client_id=38dc81e57f5a4f5c7dc26fc5e5315b1e`;
+        // const audioSrc = audioContext.createMediaElementSource(audio);
+        // const analyser = audioContext.createAnalyser();
+        // audioSrc.connect(analyser);
+        // audioSrc.connect(audioContext.destination);
+        // const bufferLength = analyser.frequencyBinCount; // 1024
+        // const dataArray = new Uint8Array(bufferLength);
 
-        function renderFrame() {
-             requestAnimationFrame(renderFrame);
+        // function renderFrame() {
+        //      requestAnimationFrame(renderFrame);
 
-             analyser.getByteFrequencyData(dataArray);
-             console.log(dataArray);
-        }
+        //      analyser.getByteFrequencyData(dataArray);
+        //      console.log(dataArray);
+        // }
         
-        audio.play();
-        renderFrame();
+        // audio.play();
+        // renderFrame();
     }
 
     incrementLoadedImages() {

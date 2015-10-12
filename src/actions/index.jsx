@@ -33,19 +33,19 @@ export function goToFindAssets(tag, history) {
 }
 export function findAssets(tag, history) {
     return (dispatch) => {
-        const trackPromise = new Promise((resolve, reject) => {
-            superagent.get('https://api.soundcloud.com/tracks')
+        const tracksPromise = new Promise((resolve, reject) => {
+            superagent.get('https://api.spotify.com/v1/search')
                 .query({
                     q: tag,
-                    client_id: '38dc81e57f5a4f5c7dc26fc5e5315b1e',
-                    limit: 1,
-                    filter: 'public'
+                    limit: 3,
+                    type: 'track'
                 })
                 .end((err, res) => {
-                    if (res.body.length === 0 || err) {
+                    const tracks = res.body.tracks.items;
+                    if (tracks.length < 3 || err) {
                         reject('sorry, there was an error in getting the track');
                     } else {
-                        resolve(res.body[0]);
+                        resolve(tracks);
                     }
                 });
         });
@@ -54,9 +54,9 @@ export function findAssets(tag, history) {
             fetchImageSrcs(tag, resolve, reject);
         });
 
-        Promise.all([trackPromise, imagesPromise])
+        Promise.all([tracksPromise, imagesPromise])
             .then((values) => {
-                dispatch(setTrack(values[0]));
+                dispatch(setTracks(values[0]));
                 dispatch(setImageSrcs(values[1]));
                 dispatch(goToLoadAssets(history)); // must come after setting
             })
@@ -106,10 +106,10 @@ function goToLoadAssets(history) {
         history.pushState(null, '/load-assets');
     };
 }
-function setTrack(track) {
+function setTracks(tracks) {
     return {
-        type: types.SET_TRACK,
-        payload: { track }
+        type: types.SET_TRACKS,
+        payload: { tracks }
     }
 }
 function setImageSrcs(imageSrcs) {
