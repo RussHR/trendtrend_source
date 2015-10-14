@@ -36,35 +36,71 @@ export default class LoadAssetsSection extends Component {
     componentDidMount() {
         const ContextClass = (window.AudioContext || window.webkitAudioContext);
         const audioContext = new ContextClass();
-        // const audio = new Audio();
-        // audio.crossOrigin = "anonymous";
-        // audio.src = this.props.tracks[0].preview_url;
-        // const audioSrc = audioContext.createMediaElementSource(audio);
-        // const analyser = audioContext.createAnalyser();
-        // audioSrc.connect(analyser);
-        // audioSrc.connect(audioContext.destination);
         const request = new XMLHttpRequest();
         request.open('GET', this.props.tracks[0].preview_url, true)
         request.responseType = 'arraybuffer';
         request.send();
         request.onload = (e) => {
             audioContext.decodeAudioData(request.response, (buffer) => {
-                debugger
+                this._runBufferThroughLowpass(buffer);
             });
         };
+    }
 
-        // const bufferLength = analyser.frequencyBinCount; // 1024
-        // const dataArray = new Uint8Array(bufferLength);
+    _runBufferThroughLowpass(buffer) {
+        const offlineContext = new OfflineAudioContext(1, buffer.length, buffer.sampleRate);
+        const source = offlineContext.createBufferSource();
+        source.buffer = buffer;
+        const filter = offlineContext.createBiquadFilter();
+        filter.type = "lowpass";
+        source.connect(filter);
+        filter.connect(offlineContext.destination);
+        source.start(0);
+        offlineContext.startRendering();
+        offlineContext.oncomplete = (e) => {
+            this._processBuffer(e.renderedBuffer);
+        };
+    }
+    _processBuffer(renderedBuffer) {
+        const float32Array = renderedBuffer.getChannelData(0);
+        const maxValue = this._getFloat32ArrayMax(float32Array);
+        const minValue = this._getFloat32ArrayMin(float32Array);
+        const threshold = minValue + (maxValue - minValue) * 0.92;
+        const peaks = this._getPeaksAtThreshold(float32Array, threshold);
+        console.log(peaks);
+    }
+    // this requires a custom function because Math.max/min is recursive and causes max stack err
+    _getFloat32ArrayMax(float32Array) {
+        let maxValue = -Infinity;
+        const arrLength = float32Array.length;
 
-        // function renderFrame() {
-        //      requestAnimationFrame(renderFrame);
+        for (let i = 0; i < arrLength; i++) {
+            const currentValue = float32Array[i];
+            if (maxValue < currentValue) maxValue = currentValue;
+        }
+        return maxValue;
+    }
+    _getFloat32ArrayMin(float32Array) {
+        let minValue = Infinity;
+        const arrLength = float32Array.length;
 
-        //      analyser.getByteFrequencyData(dataArray);
-        //      console.log(dataArray);
-        // }
-        
-        // audio.play();
-        // renderFrame();
+        for (let i = 0; i < arrLength; i++) {
+            const currentValue = float32Array[i];
+            if (minValue > currentValue) minValue = currentValue;
+        }
+        return minValue;
+    }
+    _getPeaksAtThreshold(float32Array, threshold) {
+        const peaks = [];
+        const arrLength = float32Array.length;
+
+        for (let i=0; i < arrLength; i++) {
+            if (float32Array[i] > threshold) {
+                peaks.push(i);
+                i += 10000;
+            }
+        }
+        return peaks;
     }
 
     incrementLoadedImages() {
@@ -83,7 +119,6 @@ export default class LoadAssetsSection extends Component {
                 className="loading-image" />
             );
         });
-        // const trackAudio = <audio src={`${track.stream_url}?client_id=38dc81e57f5a4f5c7dc26fc5e5315b1e`} controls />;
 
         return (
             <ContentCenter>
