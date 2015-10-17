@@ -124,15 +124,27 @@ export function getAudioBuffers(audioSrcs) {
     return (dispatch) => {
         const AudioContextClass = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext);
         const audioContext = new AudioContextClass();
-        const request = new XMLHttpRequest();
-        request.open('GET', audioSrcs[0], true)
-        request.responseType = 'arraybuffer';
-        request.send();
-        request.onload = (e) => {
-            audioContext.decodeAudioData(request.response, (audioBuffer) => {
-                dispatch(addAudioBuffer(audioBuffer));
+
+        const audioBufferPromise = new Promise((resolve, reject) => {
+
+            const loadedAudioBuffers = [];
+            audioSrcs.forEach((audioSrc) => {
+                const request = new XMLHttpRequest();
+                request.open('GET', audioSrc, true)
+                request.responseType = 'arraybuffer';
+                request.send();
+                request.onload = (e) => {
+                    audioContext.decodeAudioData(request.response, (audioBuffer) => {
+                        loadedAudioBuffers.push(audioBuffer);
+                        if (loadedAudioBuffers.length === 3) resolve(loadedAudioBuffers);
+                    });
+                };
             });
-        };
+        });
+
+        audioBufferPromise.then((loadedAudioBuffers) => {
+            console.log(loadedAudioBuffers);
+        });
     };
 }
 function addAudioBuffer(audioBuffer) {
