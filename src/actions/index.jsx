@@ -135,6 +135,7 @@ export function getAudioBuffers(audioSrcs) {
                 request.send();
                 request.onload = (e) => {
                     audioContext.decodeAudioData(request.response, (audioBuffer) => {
+                        dispatch(incrementLoadedBuffer(loadedAudioBuffers.length));
                         loadedAudioBuffers.push(audioBuffer);
                         if (loadedAudioBuffers.length === 3) resolve(loadedAudioBuffers);
                     });
@@ -143,14 +144,14 @@ export function getAudioBuffers(audioSrcs) {
         });
 
         audioBufferPromise.then((loadedAudioBuffers) => {
-            console.log(loadedAudioBuffers);
+            dispatch(setAudioBuffers(loadedAudioBuffers));
         });
     };
 }
-function addAudioBuffer(audioBuffer) {
+function setAudioBuffers(audioBuffers) {
     return {
-        type: types.ADD_AUDIO_BUFFER,
-        payload: { audioBuffer }
+        type: types.SET_AUDIO_BUFFERS,
+        payload: { audioBuffers }
     };
 }
 export function incrementLoadedBuffer(loadedAudioBufferCount) {

@@ -205,8 +205,7 @@ export default class LoadAssetsSection extends Component {
     }
 
     render() {
-        console.log(this.props.loadedAudioBufferCount);
-        const { imageSrcs, loadedImageCount, track } = this.props;
+        const { imageSrcs, loadedImageCount, loadedAudioBufferCount } = this.props;
         const images = imageSrcs.map((imageSrc, i) => {
             return (
                 <img 
@@ -220,6 +219,8 @@ export default class LoadAssetsSection extends Component {
         return (
             <ContentCenter>
                 <span>Loaded Image Count: { loadedImageCount }/20</span>
+                <br />
+                <span>Loaded Audio Track Count: { loadedAudioBufferCount }/3</span>
                 {images}
             </ContentCenter>
         );

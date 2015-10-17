@@ -34,8 +34,8 @@ function loadedImageCount(state = 0, action) {
 
 function audioBuffers(state = [], action) {
     switch (action.type) {
-        case types.ADD_AUDIO_BUFFER:
-            return [action.payload.audioBuffer, ...state];
+        case types.SET_AUDIO_BUFFERS:
+            return action.payload.audioBuffers;
         default:
             return state;
     }
