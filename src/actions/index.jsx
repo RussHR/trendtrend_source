@@ -110,16 +110,38 @@ function setTracks(tracks) {
     return {
         type: types.SET_TRACKS,
         payload: { tracks }
-    }
+    };
 }
 function setImageSrcs(imageSrcs) {
     return {
         type: types.SET_IMAGE_SRCS,
         payload: { imageSrcs }
-    }
+    };
 }
 
 // loading assets
+export function getAudioBuffers(audioSrcs) {
+    return (dispatch) => {
+        const AudioContextClass = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext);
+        const audioContext = new AudioContextClass();
+        const request = new XMLHttpRequest();
+        request.open('GET', audioSrcs[0], true)
+        request.responseType = 'arraybuffer';
+        request.send();
+        request.onload = (e) => {
+            audioContext.decodeAudioData(request.response, (audioBuffer) => {
+                dispatch(addAudioBuffer(audioBuffer));
+            });
+        };
+    };
+}
+function addAudioBuffer(audioBuffer) {
+    return {
+        type: types.ADD_AUDIO_BUFFER,
+        payload: { audioBuffer }
+    };
+}
+
 export function imageLoaded(loadedImageCount, history) {
     return (dispatch) => {
         if (loadedImageCount === 19) {
@@ -127,11 +149,11 @@ export function imageLoaded(loadedImageCount, history) {
         } else {
             dispatch(incrementLoadedImages(loadedImageCount));
         }
-    }
+    };
 }
 function incrementLoadedImages(loadedImageCount) {
     return {
         type: types.INCREMENT_LOADED_IMAGES,
         payload: { loadedImageCount }
-    }
+    };
 }

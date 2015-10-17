@@ -6,7 +6,8 @@ import ContentCenter                   from '../ContentCenter';
 @connect(state => ({
     imageSrcs: state.imageSrcs,
     loadedImageCount: state.loadedImageCount,
-    tracks: state.tracks
+    tracks: state.tracks,
+    audioBuffers: state.audioBuffers
 }))
 export default class LoadAssetsSection extends Component {
     static propTypes = {
@@ -33,105 +34,101 @@ export default class LoadAssetsSection extends Component {
         if (imageSrcs.length < 20) dispatch(ActionCreators.goToRequestTag(history));
     }
 
+    componentDidUpdate() {
+        console.log(this.props.audioBuffers);
+    }
+
     componentDidMount() {
+        this._getAudioBuffers();
         // create the nodes/elements
-        const AudioContextClass = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext);
-        const requestAnimationFrameFunction = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozAnimationFrame);
-        this.audioContext = new AudioContextClass();
-        let audioBuffer;
-        this.sourceNode = this.audioContext.createBufferSource();
-        const analyserNode = this.audioContext.createAnalyser();
-        const sampleSize = 1024;
-        const javascriptNode = this.audioContext.createScriptProcessor(sampleSize, 1, 1);
-        this.audioPlaying = false;
-        window.amplitudeArray = new Uint8Array(analyserNode.frequencyBinCount);
-        window._drawTimeDomain = this._drawTimeDomain;
-        const audioUrl = this.props.tracks[0].preview_url;
+        // const requestAnimationFrameFunction = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozAnimationFrame);
+        // this.audioContext = new AudioContextClass();
+        // let audioBuffer;
+        // this.sourceNode = this.audioContext.createBufferSource();
+        // const analyserNode = this.audioContext.createAnalyser();
+        // const sampleSize = 1024;
+        // const javascriptNode = this.audioContext.createScriptProcessor(sampleSize, 1, 1);
+        // this.audioPlaying = false;
+        // window.amplitudeArray = new Uint8Array(analyserNode.frequencyBinCount);
+        // window._drawTimeDomain = this._drawTimeDomain;
+        // const audioUrl = this.props.tracks[0].preview_url;
 
-        // connect things
-        this.sourceNode.connect(this.audioContext.destination);
-        this.sourceNode.connect(analyserNode);
-        analyserNode.connect(javascriptNode);
-        javascriptNode.connect(this.audioContext.destination);
+        // // connect things
+        // this.sourceNode.connect(this.audioContext.destination);
+        // this.sourceNode.connect(analyserNode);
+        // analyserNode.connect(javascriptNode);
+        // javascriptNode.connect(this.audioContext.destination);
 
-        // setup the handler
-        javascriptNode.onaudioprocess = () => {
-            // XXX: do I need to redefine amplitude Array in here?
-            analyserNode.getByteTimeDomainData(window.amplitudeArray);
+        // // setup the handler
+        // javascriptNode.onaudioprocess = () => {
+        //     // XXX: do I need to redefine amplitude Array in here?
+        //     analyserNode.getByteTimeDomainData(window.amplitudeArray);
 
-            if (this.audioPlaying === true) {
-                requestAnimationFrameFunction(window._drawTimeDomain);
-            }
-        };
-
-        if (!this.audioData) {
-            this._loadSound(audioUrl);
-        } else {
-            this._playSound(audioData);
-        }
-        // const audioContext = new this.ContextClass();
-        // const request = new XMLHttpRequest();
-        // request.open('GET', this.props.tracks[0].preview_url, true)
-        // request.responseType = 'arraybuffer';
-        // request.send();
-        // request.onload = (e) => {
-        //     audioContext.decodeAudioData(request.response, (buffer) => {
-        //         this._processBuffer(buffer);
-        //     });
+        //     if (this.audioPlaying === true) {
+        //         requestAnimationFrameFunction(window._drawTimeDomain);
+        //     }
         // };
+
+        // if (!this.audioData) {
+        //     this._loadSound(audioUrl);
+        // } else {
+        //     this._playSound(audioData);
+        // }
     }
 
-    _loadSound(url) {
-        const request = new XMLHttpRequest();
-        request.open('GET', url, true)
-        request.responseType = 'arraybuffer';
-        request.onload = (e) => {
-            this.audioContext.decodeAudioData(request.response, (buffer) => {
-                this.audioData = buffer;
-                this._playSound(this.audioData);
-            });
-        };
-        request.send();
+    _getAudioBuffers() {
+        const { dispatch, tracks } = this.props;
+        const audioSrcs = tracks.map((track) => {
+            return track.preview_url;
+        });
+        dispatch(ActionCreators.getAudioBuffers(audioSrcs));
     }
 
-    _playSound(buffer) {
-        this.sourceNode.buffer = buffer;
-        this.sourceNode.start(0);
-        this.sourceNode.loop = true;
-        this.audioPlaying = true;
-    }
-    _drawTimeDomain() {
-        window.requestAnimationFrame(window._drawTimeDomain);
-        window.frameCount = (window.frameCount || 0);
-        let minValue = Infinity;
-        let maxValue = -Infinity;
-        for (let i = 0; i < window.amplitudeArray.length; i++) {
-            const value = window.amplitudeArray[i] / 255;
-            if (value > maxValue) {
-                maxValue = value;
-            } else if (value < minValue) {
-                minValue = value;
-            }
-        }
-        window.frameCount += 1;
-        if (window.frameCount > 200) {
-            console.log(maxValue);
-            window.frameCount = 0;
-        }
-    }
-    // _processBuffer(buffer) {
-    //     let audioContext;
-    //     let audioBuffer;
-    //     let sourceNode;
-    //     let analyserNode;
-    //     let javascriptNode;
-    //     const audioData = null;
-    //     const audioPlaying = false;
-    //     const sampleSize = 1024;
-    //     // context { source -> filter -> analyser -> context.destination }
-    //     const offlineContext = new OfflineAudioContext(1, buffer.length, buffer.sampleRate);
-    //     const source = offlineContext.createBufferSource();
+    // _runBufferThroughLowpass(buffer) {
+    //     const OfflineAudioContextClass = (window.OfflineAudioContext || window.webkitOfflineAudioContext || window.mozOfflineAudioContext);
+    //     const offlineAudioContext = new OfflineAudioContextClass(1, buffer.length, buffer.sampleRate);
+    //     const source = offlineAudioContext.createBufferSource();
     //     source.buffer = buffer;
+    // }
+
+    // _loadSound(url) {
+    //     const request = new XMLHttpRequest();
+    //     request.open('GET', url, true)
+    //     request.responseType = 'arraybuffer';
+    //     request.onload = (e) => {
+    //         this.audioContext.decodeAudioData(request.response, (buffer) => {
+    //             this.audioData = buffer;
+    //             this._playSound(this.audioData);
+    //         });
+    //     };
+    //     request.send();
+    // }
+
+    // _playSound(buffer) {
+    //     this.sourceNode.buffer = buffer;
+    //     this.sourceNode.start(0);
+    //     this.sourceNode.loop = true;
+    //     this.audioPlaying = true;
+    // }
+    // _drawTimeDomain() {
+    //     window.requestAnimationFrame(window._drawTimeDomain);
+    //     window.frameCount = (window.frameCount || 0);
+    //     let minValue = Infinity;
+    //     let maxValue = -Infinity;
+    //     for (let i = 0; i < window.amplitudeArray.length; i++) {
+    //         const value = window.amplitudeArray[i] / 255;
+    //         if (value > maxValue) {
+    //             maxValue = value;
+    //         } else if (value < minValue) {
+    //             minValue = value;
+    //         }
+    //     }
+    //     window.frameCount += 1;
+    //     if (window.frameCount > 200) {
+    //         console.log(maxValue);
+    //         window.frameCount = 0;
+    //     }
+    // }
     //     const filter = offlineContext.createBiquadFilter();
     //     filter.type = "lowpass";
     //     const analyser = offlineContext.createAnalyser();

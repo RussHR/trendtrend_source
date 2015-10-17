@@ -32,5 +32,14 @@ function loadedImageCount(state = 0, action) {
     }
 }
 
-const mainReducer = combineReducers({ imageSrcs, tracks, loadedImageCount });
+function audioBuffers(state = [], action) {
+    switch (action.type) {
+        case types.ADD_AUDIO_BUFFER:
+            return [action.payload.audioBuffer, ...state];
+        default:
+            return state;
+    }
+}
+
+const mainReducer = combineReducers({ imageSrcs, tracks, loadedImageCount, audioBuffers });
 export default mainReducer;
