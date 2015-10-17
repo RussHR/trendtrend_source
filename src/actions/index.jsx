@@ -141,14 +141,16 @@ function addAudioBuffer(audioBuffer) {
         payload: { audioBuffer }
     };
 }
+export function incrementLoadedBuffer(loadedAudioBufferCount) {
+    return {
+        type: types.INCREMENT_LOADED_BUFFER_COUNT,
+        payload: { loadedAudioBufferCount }
+    };
+}
 
 export function imageLoaded(loadedImageCount, history) {
     return (dispatch) => {
-        if (loadedImageCount === 19) {
-            // history.pushState(null, '/play-animation');
-        } else {
-            dispatch(incrementLoadedImages(loadedImageCount));
-        }
+        dispatch(incrementLoadedImages(loadedImageCount));
     };
 }
 function incrementLoadedImages(loadedImageCount) {

@@ -40,6 +40,20 @@ function audioBuffers(state = [], action) {
             return state;
     }
 }
+function loadedAudioBufferCount(state = 0, action) {
+    switch(action.type) {
+        case types.INCREMENT_LOADED_BUFFER_COUNT:
+            return action.payload.loadedAudioBufferCount + 1;
+        default:
+            return state;
+    }
+}
 
-const mainReducer = combineReducers({ imageSrcs, tracks, loadedImageCount, audioBuffers });
+const mainReducer = combineReducers({
+    imageSrcs,
+    tracks,
+    loadedImageCount,
+    audioBuffers,
+    loadedAudioBufferCount
+});
 export default mainReducer;

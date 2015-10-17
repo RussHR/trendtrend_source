@@ -7,7 +7,8 @@ import ContentCenter                   from '../ContentCenter';
     imageSrcs: state.imageSrcs,
     loadedImageCount: state.loadedImageCount,
     tracks: state.tracks,
-    audioBuffers: state.audioBuffers
+    audioBuffers: state.audioBuffers,
+    loadedAudioBufferCount: state.loadedAudioBufferCount
 }))
 export default class LoadAssetsSection extends Component {
     static propTypes = {
@@ -32,10 +33,6 @@ export default class LoadAssetsSection extends Component {
     componentWillMount() {
         const { imageSrcs, dispatch, history } = this.props;
         if (imageSrcs.length < 20) dispatch(ActionCreators.goToRequestTag(history));
-    }
-
-    componentDidUpdate() {
-        console.log(this.props.audioBuffers);
     }
 
     componentDidMount() {
@@ -208,6 +205,7 @@ export default class LoadAssetsSection extends Component {
     }
 
     render() {
+        console.log(this.props.loadedAudioBufferCount);
         const { imageSrcs, loadedImageCount, track } = this.props;
         const images = imageSrcs.map((imageSrc, i) => {
             return (
