@@ -137,9 +137,15 @@ export function getAudioBuffers(tracks) {
                 request.onload = (e) => {
                     audioContext.decodeAudioData(request.response, (audioBuffer) => {
                         dispatch(incrementLoadedBuffer(tracksWithLoadedBuffers.length));
-                        getPeaksFromBuffer(audioBuffer);
-                        tracksWithLoadedBuffers.push({ audioBuffer, ...track });
-                        if (tracksWithLoadedBuffers.length === 3) resolve(tracksWithLoadedBuffers);
+                        const peaksPromise = new Promise((thresholdResolve, thresholdReject) => {
+                            getPeaksFromBuffer(audioBuffer, thresholdResolve);
+                        });
+
+                        peaksPromise.then((audioBufferAndThreshold) => {
+                            // audioBufferAndThreshold == { audioBuffer, threshold }
+                            tracksWithLoadedBuffers.push({ ...audioBufferAndThreshold, ...track });
+                            if (tracksWithLoadedBuffers.length === 3) resolve(tracksWithLoadedBuffers);
+                        });
                     });
                 };
             });
