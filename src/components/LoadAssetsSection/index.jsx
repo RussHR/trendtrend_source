@@ -7,7 +7,8 @@ import ContentCenter from '../ContentCenter';
     imageSrcs: state.imageSrcs,
     loadedImageCount: state.loadedImageCount,
     tracks: state.tracks,
-    loadedAudioBufferCount: state.loadedAudioBufferCount
+    loadedAudioBufferCount: state.loadedAudioBufferCount,
+    analysedTrackCount: state.analysedTrackCount
 }))
 export default class LoadAssetsSection extends Component {
     static propTypes = {
@@ -136,7 +137,7 @@ export default class LoadAssetsSection extends Component {
     }
 
     render() {
-        const { imageSrcs, loadedImageCount, loadedAudioBufferCount } = this.props;
+        const { imageSrcs, loadedImageCount, loadedAudioBufferCount, analysedTrackCount } = this.props;
         const images = imageSrcs.map((imageSrc, i) => {
             return (
                 <img 
@@ -152,6 +153,8 @@ export default class LoadAssetsSection extends Component {
                 <span>Loaded Image Count: { loadedImageCount }/20</span>
                 <br />
                 <span>Loaded Audio Track Count: { loadedAudioBufferCount }/3</span>
+                <br />
+                <span>Tracks Analysed: { analysedTrackCount }/3</span>
                 {images}
             </ContentCenter>
         );

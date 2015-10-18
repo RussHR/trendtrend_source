@@ -128,7 +128,8 @@ export function getAudioBuffersAndThresholds(tracks) {
 
         const audioBufferPromise = new Promise((resolve, reject) => {
 
-            const tracksWithLoadedBuffers = [];
+            const analysedTracks = [];
+            let numOfBuffersFetched = 0;
             tracks.forEach((track) => {
                 const request = new XMLHttpRequest();
                 request.open('GET', track.preview_url, true)
@@ -136,15 +137,18 @@ export function getAudioBuffersAndThresholds(tracks) {
                 request.send();
                 request.onload = (e) => {
                     audioContext.decodeAudioData(request.response, (audioBuffer) => {
-                        dispatch(incrementLoadedBuffer(tracksWithLoadedBuffers.length));
+                        dispatch(incrementLoadedBuffer(numOfBuffersFetched));
+                        numOfBuffersFetched++;
+
                         const thresholdPromise = new Promise((thresholdResolve, thresholdReject) => {
                             getPeaksFromBuffer(audioBuffer, thresholdResolve);
                         });
 
                         thresholdPromise.then((audioBufferAndThreshold) => {
-                            // audioBufferAndThreshold == { audioBuffer, threshold }
-                            tracksWithLoadedBuffers.push({ ...audioBufferAndThreshold, ...track });
-                            if (tracksWithLoadedBuffers.length === 3) resolve(tracksWithLoadedBuffers);
+                            dispatch(incrementAnalysedTrackCount(analysedTracks.length));
+                            // audioBufferAndThreshold is { audioBuffer, threshold }
+                            analysedTracks.push({ ...audioBufferAndThreshold, ...track });
+                            if (analysedTracks.length === 3) resolve(analysedTracks);
                         });
                     });
                 };
@@ -161,6 +165,12 @@ export function incrementLoadedBuffer(loadedAudioBufferCount) {
     return {
         type: types.INCREMENT_LOADED_BUFFER_COUNT,
         payload: { loadedAudioBufferCount }
+    };
+}
+function incrementAnalysedTrackCount(analysedTrackCount) {
+    return {
+        type: types.INCREMENT_ANALYSED_TRACK_COUNT,
+        payload: { analysedTrackCount }
     };
 }
 

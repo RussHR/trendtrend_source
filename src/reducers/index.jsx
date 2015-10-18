@@ -33,9 +33,18 @@ function loadedImageCount(state = 0, action) {
 }
 
 function loadedAudioBufferCount(state = 0, action) {
-    switch(action.type) {
+    switch (action.type) {
         case types.INCREMENT_LOADED_BUFFER_COUNT:
             return action.payload.loadedAudioBufferCount + 1;
+        default:
+            return state;
+    }
+}
+
+function analysedTrackCount(state = 0, action) {
+    switch(action.type) {
+        case types.INCREMENT_ANALYSED_TRACK_COUNT:
+            return action.payload.analysedTrackCount + 1;
         default:
             return state;
     }
@@ -45,6 +54,7 @@ const mainReducer = combineReducers({
     imageSrcs,
     tracks,
     loadedImageCount,
-    loadedAudioBufferCount
+    loadedAudioBufferCount,
+    analysedTrackCount
 });
 export default mainReducer;
