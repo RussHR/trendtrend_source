@@ -7,7 +7,6 @@ import ContentCenter                   from '../ContentCenter';
     imageSrcs: state.imageSrcs,
     loadedImageCount: state.loadedImageCount,
     tracks: state.tracks,
-    audioBuffers: state.audioBuffers,
     loadedAudioBufferCount: state.loadedAudioBufferCount
 }))
 export default class LoadAssetsSection extends Component {
@@ -75,10 +74,7 @@ export default class LoadAssetsSection extends Component {
 
     _getAudioBuffers() {
         const { dispatch, tracks } = this.props;
-        const audioSrcs = tracks.map((track) => {
-            return track.preview_url;
-        });
-        dispatch(ActionCreators.getAudioBuffers(audioSrcs));
+        dispatch(ActionCreators.getAudioBuffers(tracks));
     }
 
     // _runBufferThroughLowpass(buffer) {

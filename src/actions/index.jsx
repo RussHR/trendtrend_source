@@ -120,7 +120,7 @@ function setImageSrcs(imageSrcs) {
 }
 
 // loading assets
-export function getAudioBuffers(audioSrcs) {
+export function getAudioBuffers(tracks) {
     return (dispatch) => {
         const AudioContextClass = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext);
         const audioContext = new AudioContextClass();
@@ -128,23 +128,23 @@ export function getAudioBuffers(audioSrcs) {
         const audioBufferPromise = new Promise((resolve, reject) => {
 
             const loadedAudioBuffers = [];
-            audioSrcs.forEach((audioSrc) => {
+            tracks.forEach((track) => {
                 const request = new XMLHttpRequest();
-                request.open('GET', audioSrc, true)
+                request.open('GET', track.preview_url, true)
                 request.responseType = 'arraybuffer';
                 request.send();
                 request.onload = (e) => {
                     audioContext.decodeAudioData(request.response, (audioBuffer) => {
                         dispatch(incrementLoadedBuffer(loadedAudioBuffers.length));
-                        loadedAudioBuffers.push(audioBuffer);
+                        loadedAudioBuffers.push({ audioBuffer, ...track });
                         if (loadedAudioBuffers.length === 3) resolve(loadedAudioBuffers);
                     });
                 };
             });
         });
 
-        audioBufferPromise.then((loadedAudioBuffers) => {
-            dispatch(setAudioBuffers(loadedAudioBuffers));
+        audioBufferPromise.then((tracks) => {
+            dispatch(setTracks(tracks));
         });
     };
 }
