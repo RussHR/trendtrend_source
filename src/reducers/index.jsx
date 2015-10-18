@@ -53,7 +53,6 @@ const mainReducer = combineReducers({
     imageSrcs,
     tracks,
     loadedImageCount,
-    audioBuffers,
     loadedAudioBufferCount
 });
 export default mainReducer;
