@@ -121,7 +121,7 @@ function setImageSrcs(imageSrcs) {
 }
 
 // loading assets
-export function getAudioBuffers(tracks) {
+export function getAudioBuffersAndThresholds(tracks) {
     return (dispatch) => {
         const AudioContextClass = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext);
         const audioContext = new AudioContextClass();
@@ -137,11 +137,11 @@ export function getAudioBuffers(tracks) {
                 request.onload = (e) => {
                     audioContext.decodeAudioData(request.response, (audioBuffer) => {
                         dispatch(incrementLoadedBuffer(tracksWithLoadedBuffers.length));
-                        const peaksPromise = new Promise((thresholdResolve, thresholdReject) => {
+                        const thresholdPromise = new Promise((thresholdResolve, thresholdReject) => {
                             getPeaksFromBuffer(audioBuffer, thresholdResolve);
                         });
 
-                        peaksPromise.then((audioBufferAndThreshold) => {
+                        thresholdPromise.then((audioBufferAndThreshold) => {
                             // audioBufferAndThreshold == { audioBuffer, threshold }
                             tracksWithLoadedBuffers.push({ ...audioBufferAndThreshold, ...track });
                             if (tracksWithLoadedBuffers.length === 3) resolve(tracksWithLoadedBuffers);
@@ -152,14 +152,9 @@ export function getAudioBuffers(tracks) {
         });
 
         audioBufferPromise.then((tracks) => {
+            console.log(tracks);
             dispatch(setTracks(tracks));
         });
-    };
-}
-function setAudioBuffers(audioBuffers) {
-    return {
-        type: types.SET_AUDIO_BUFFERS,
-        payload: { audioBuffers }
     };
 }
 export function incrementLoadedBuffer(loadedAudioBufferCount) {

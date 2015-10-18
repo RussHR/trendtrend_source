@@ -35,7 +35,7 @@ export default class LoadAssetsSection extends Component {
     }
 
     componentDidMount() {
-        this._getAudioBuffers();
+        this._getAudioBuffersAndThresholds();
         // create the nodes/elements
         // const requestAnimationFrameFunction = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozAnimationFrame);
         // this.audioContext = new AudioContextClass();
@@ -72,9 +72,9 @@ export default class LoadAssetsSection extends Component {
         // }
     }
 
-    _getAudioBuffers() {
+    _getAudioBuffersAndThresholds() {
         const { dispatch, tracks } = this.props;
-        dispatch(ActionCreators.getAudioBuffers(tracks));
+        dispatch(ActionCreators.getAudioBuffersAndThresholds(tracks));
     }
 
     // _loadSound(url) {
