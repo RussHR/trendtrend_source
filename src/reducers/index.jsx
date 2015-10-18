@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import * as types          from '../constants/ActionTypes';
+import * as types from '../constants/ActionTypes';
 
 function imageSrcs(state = [], action) {
     switch (action.type) {

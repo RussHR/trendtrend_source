@@ -1,6 +1,7 @@
-import * as types      from '../constants/ActionTypes';
-import superagent      from 'superagent';
-import jsonp           from 'jsonp';
+import * as types from '../constants/ActionTypes';
+import { getPeaksFromBuffer } from '../helperFunctions';
+import superagent from 'superagent';
+import jsonp from 'jsonp';
 
 // request tag
 export function goToRequestTag(history) {
@@ -127,7 +128,7 @@ export function getAudioBuffers(tracks) {
 
         const audioBufferPromise = new Promise((resolve, reject) => {
 
-            const loadedAudioBuffers = [];
+            const tracksWithLoadedBuffers = [];
             tracks.forEach((track) => {
                 const request = new XMLHttpRequest();
                 request.open('GET', track.preview_url, true)
@@ -135,9 +136,10 @@ export function getAudioBuffers(tracks) {
                 request.send();
                 request.onload = (e) => {
                     audioContext.decodeAudioData(request.response, (audioBuffer) => {
-                        dispatch(incrementLoadedBuffer(loadedAudioBuffers.length));
-                        loadedAudioBuffers.push({ audioBuffer, ...track });
-                        if (loadedAudioBuffers.length === 3) resolve(loadedAudioBuffers);
+                        dispatch(incrementLoadedBuffer(tracksWithLoadedBuffers.length));
+                        getPeaksFromBuffer(audioBuffer);
+                        tracksWithLoadedBuffers.push({ audioBuffer, ...track });
+                        if (tracksWithLoadedBuffers.length === 3) resolve(tracksWithLoadedBuffers);
                     });
                 };
             });
