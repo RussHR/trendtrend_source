@@ -32,14 +32,6 @@ function loadedImageCount(state = 0, action) {
     }
 }
 
-function audioBuffers(state = [], action) {
-    switch (action.type) {
-        case types.SET_AUDIO_BUFFERS:
-            return action.payload.audioBuffers;
-        default:
-            return state;
-    }
-}
 function loadedAudioBufferCount(state = 0, action) {
     switch(action.type) {
         case types.INCREMENT_LOADED_BUFFER_COUNT:
