@@ -77,13 +77,6 @@ export default class LoadAssetsSection extends Component {
         dispatch(ActionCreators.getAudioBuffers(tracks));
     }
 
-    // _runBufferThroughLowpass(buffer) {
-    //     const OfflineAudioContextClass = (window.OfflineAudioContext || window.webkitOfflineAudioContext || window.mozOfflineAudioContext);
-    //     const offlineAudioContext = new OfflineAudioContextClass(1, buffer.length, buffer.sampleRate);
-    //     const source = offlineAudioContext.createBufferSource();
-    //     source.buffer = buffer;
-    // }
-
     // _loadSound(url) {
     //     const request = new XMLHttpRequest();
     //     request.open('GET', url, true)
@@ -136,64 +129,6 @@ export default class LoadAssetsSection extends Component {
     //     };
     // }
 
-    // _processBuffer(renderedBuffer) {
-    //     const float32Array = renderedBuffer.getChannelData(0);
-    //     const maxValue = this._getFloat32ArrayMax(float32Array);
-    //     const minValue = this._getFloat32ArrayMin(float32Array);
-    //     const threshold = minValue + (maxValue - minValue) * 0.9;
-    //     const peaks = this._getPeaksAtThreshold(float32Array, threshold);
-    //     const intervals = this._getIntervalsFromPeaks(peaks);
-    // }
-
-    // this requires a custom function because Math.max/min is recursive and causes max stack err
-    // _getFloat32ArrayMax(float32Array) {
-    //     let maxValue = -Infinity;
-    //     const arrLength = float32Array.length;
-
-    //     for (let i = 0; i < arrLength; i++) {
-    //         const currentValue = float32Array[i];
-    //         if (maxValue < currentValue) maxValue = currentValue;
-    //     }
-
-    //     return maxValue;
-    // }
-
-    // _getFloat32ArrayMin(float32Array) {
-    //     let minValue = Infinity;
-    //     const arrLength = float32Array.length;
-
-    //     for (let i = 0; i < arrLength; i++) {
-    //         const currentValue = float32Array[i];
-    //         if (minValue > currentValue) minValue = currentValue;
-    //     }
-
-    //     return minValue;
-    // }
-
-    // _getPeaksAtThreshold(float32Array, threshold) {
-    //     const peaks = [];
-    //     const arrLength = float32Array.length;
-
-    //     for (let i=0; i < arrLength; i++) {
-    //         if (float32Array[i] > threshold) {
-    //             peaks.push(i);
-    //             i += 10000;
-    //         }
-    //     }
-
-    //     return peaks;
-    // }
-
-    // _getIntervalsFromPeaks(peaks) {
-    //     const intervals = [];
-    //     peaks.forEach((peak, peakIndex) => {
-    //         for (let i = 0; i < 10; i++) {
-    //             const interval = peaks[peakIndex + i] - peak;
-    //         }
-    //     });
-
-    //     return intervals;
-    // }
 
     incrementLoadedImages() {
         const { dispatch, loadedImageCount, history } = this.props;
