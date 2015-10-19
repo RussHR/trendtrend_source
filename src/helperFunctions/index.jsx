@@ -14,17 +14,16 @@ function runBufferThroughLowpass(buffer, resolve) {
     source.start(0);
     offlineContext.startRendering();
     offlineContext.oncomplete = (e) => {
-        processLowpassedBuffer(e.renderedBuffer, resolve);
+        processLowpassedBuffer(e.renderedBuffer, buffer, resolve);
     };
 }
 
-// calling param audioBuffer to take advantage of shorthand syntax
-function processLowpassedBuffer(audioBuffer, resolve) {
-    const float32Array = audioBuffer.getChannelData(0);
+function processLowpassedBuffer(renderedBuffer, originalBuffer, resolve) {
+    const float32Array = renderedBuffer.getChannelData(0);
     const maxValue = getFloat32ArrayMax(float32Array);
     const minValue = getFloat32ArrayMin(float32Array);
     const threshold = minValue + ((maxValue - minValue) * 0.92);
-    resolve({ audioBuffer, threshold });
+    resolve({ audioBuffer: originalBuffer, threshold });
 }
 
 function getFloat32ArrayMax(float32Array) {
