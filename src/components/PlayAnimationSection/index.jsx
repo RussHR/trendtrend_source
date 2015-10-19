@@ -21,7 +21,7 @@ export default class PlayAnimationSection extends Component {
     };
 
     state = {
-        imageMultiplier: 0
+        sizeMultiplier: 0
     }
     
     componentDidMount() {
@@ -45,32 +45,42 @@ export default class PlayAnimationSection extends Component {
         javascriptNode.onaudioprocess = throttle(() => {
             this.amplitudeArray = new Uint8Array(analyserNode.frequencyBinCount);
             analyserNode.getByteTimeDomainData(this.amplitudeArray);
-            this._drawTimeDomain();
-        }, 500);
+            this.setImageHeight();
+        }, 100);
 
         sourceNode.buffer = this.props.tracks[0].audioBuffer;
         sourceNode.start(0);
     }
 
-    _drawTimeDomain() {
+    setImageHeight() {
+        const { threshold } = this.props.tracks[0];
         let maxValue = -Infinity;
 
         for (let i = 0; i < this.amplitudeArray.length; i++) {
-            const value = this.amplitudeArray[i] / 255;
+            const value = this.amplitudeArray[i];
             if (value > maxValue) maxValue = value;
         }
 
-        this.setState({ imageMultiplier: maxValue });
+        if (maxValue > threshold) console.log (maxValue, threshold);
+        
+        const sizeMultiplier = Math.pow((maxValue/255), 4);
+        this.setState({ sizeMultiplier });
     }
 
 
     render() {
-        const height = `${100 * this.state.imageMultiplier}px`;
+        const { sizeMultiplier } = this.state;
+        const cssScaleObj = {
+            transform: `scale(${sizeMultiplier})`,
+            MozTransform: `scale(${sizeMultiplier})`,
+            WebkitTransform: `scale(${sizeMultiplier})`
+        }
         const images = this.props.imageSrcs.map((imageSrc, i) => {
             return (
                 <img 
+                className="animation-image"
                 src={ imageSrc } 
-                style={{ height }}
+                style={cssScaleObj}
                 key={ i } />
             );
         });

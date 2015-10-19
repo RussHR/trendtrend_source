@@ -5,3 +5,11 @@
     -webkit-transform: $transforms;
     transform: $transforms;
 }
+
+@mixin transition($transition-properties) {
+    -moz-transition: $transition-properties;
+    -o-transition: $transition-properties;
+    -ms-transition: $transition-properties;
+    -webkit-transition: $transition-properties;
+    transition: $transition-properties;
+}

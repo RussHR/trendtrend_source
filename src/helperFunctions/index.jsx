@@ -22,8 +22,9 @@ function processLowpassedBuffer(renderedBuffer, originalBuffer, resolve) {
     const float32Array = renderedBuffer.getChannelData(0);
     const maxValue = getFloat32ArrayMax(float32Array);
     const minValue = getFloat32ArrayMin(float32Array);
-    const threshold = minValue + ((maxValue - minValue) * 0.92);
-    resolve({ audioBuffer: originalBuffer, threshold });
+    const float32Threshold = minValue + ((maxValue - minValue) * 0.98);
+    const uInt8Threshold = (((float32Threshold - minValue) * 255) / (maxValue - minValue));
+    resolve({ audioBuffer: originalBuffer, threshold: uInt8Threshold });
 }
 
 function getFloat32ArrayMax(float32Array) {

@@ -1,0 +1,7 @@
+@import '../../styles/_mixins';
+
+.animation-image {
+    max-height: 300px;
+    max-width: 300px;
+    @include transition(all 0.1s);
+}
