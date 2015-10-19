@@ -146,7 +146,6 @@ function fetchImages(imageSrcs, resolve) {
             image.onload = () => {
                 dispatch(incrementLoadedImageCount(fetchedImageCount));
                 fetchedImageCount++;
-                console.log(fetchedImageCount);
                 if (fetchedImageCount === 20) resolve();
             };
         });
