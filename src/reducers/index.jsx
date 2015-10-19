@@ -1,6 +1,15 @@
 import { combineReducers } from 'redux';
 import * as types from '../constants/ActionTypes';
 
+function currentPhase(state = 'requestTag', action) {
+    switch (action.type) {
+        case types.SET_CURRENT_PHASE:
+            return action.payload.phase;
+        default:
+            return state;
+    }
+}
+
 function imageSrcs(state = [], action) {
     switch (action.type) {
         case types.SET_IMAGE_SRCS:
@@ -51,6 +60,7 @@ function analysedTrackCount(state = 0, action) {
 }
 
 const mainReducer = combineReducers({
+    currentPhase,
     imageSrcs,
     tracks,
     loadedImageCount,

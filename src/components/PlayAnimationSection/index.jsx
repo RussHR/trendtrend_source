@@ -14,13 +14,7 @@ export default class ImageAnimationSection extends Component {
                 );
             }
         },
-        dispatch: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired,
-        location: PropTypes.object.isRequired,
-        params: PropTypes.object.isRequired,
-        route: PropTypes.object.isRequired,
-        routeParams: PropTypes.object.isRequired,
-        routes: PropTypes.array.isRequired
+        dispatch: PropTypes.func.isRequired
     };
 
     componentWillMount() {

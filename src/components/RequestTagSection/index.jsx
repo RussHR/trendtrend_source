@@ -6,13 +6,7 @@ import ContentCenter                                 from '../ContentCenter';
 @connect(state => ({}))
 export default class RequestTagSection extends Component {
     static propTypes = {
-        dispatch: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired,
-        location: PropTypes.object.isRequired,
-        params: PropTypes.object.isRequired,
-        route: PropTypes.object.isRequired,
-        routeParams: PropTypes.object.isRequired,
-        routes: PropTypes.array.isRequired
+        dispatch: PropTypes.func.isRequired
     };
 
     onSubmit(e) {

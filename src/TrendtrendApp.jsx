@@ -1,25 +1,35 @@
 import React, { Component, PropTypes }  from 'react';
-import * as ActionCreators              from './actions';
-import FindAssetsSection                from './components/FindAssetsSection';
-import ImageAnimationSection            from './components/ImageAnimationSection';
-import LoadAssetsSection                from './components/LoadAssetsSection';
-import RequestTagSection                from './components/RequestTagSection';
+import { connect } from 'react-redux';
+import RequestTagSection from './components/RequestTagSection';
+import FindAssetsSection from './components/FindAssetsSection';
+import LoadAssetsSection from './components/LoadAssetsSection';
+import PlayAnimationSection from './components/PlayAnimationSection';
 
+@connect(state => ({
+    currentPhase: state.currentPhase
+}))
 export default class TrendtrendApp extends Component {
-    static propTypes = {
-        children: PropTypes.element.isRequired,
-        history: PropTypes.object.isRequired,
-        location: PropTypes.object.isRequired,
-        params: PropTypes.object.isRequired,
-        route: PropTypes.object.isRequired,
-        routeParams: PropTypes.object.isRequired,
-        routes: PropTypes.array.isRequired
-    };
-
     render() {
+        // at the moment, don't know an alternative to switch
+        let currentSection;
+        switch (this.props.currentPhase) {
+            case ('findAssets'):
+                currentSection = <FindAssetsSection />;
+                break;               
+            case ('loadAssets'):
+                currentSection = <LoadAssetsSection />;
+                break;              
+            case ('playAnimation'):
+                currentSection = <PlayAnimationSection />;
+                break;
+            case ('requestTag'):
+            default:
+                currentSection = <RequestTagSection />;
+        }
+
         return (
             <div>
-                { this.props.children }
+                {currentSection}
             </div>
         );
     }

@@ -21,13 +21,7 @@ export default class LoadAssetsSection extends Component {
         },
         loadedImageCount: PropTypes.number.isRequired,
         tracks: PropTypes.arrayOf(PropTypes.object.isRequired),
-        dispatch: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired,
-        location: PropTypes.object.isRequired,
-        params: PropTypes.object.isRequired,
-        route: PropTypes.object.isRequired,
-        routeParams: PropTypes.object.isRequired,
-        routes: PropTypes.array.isRequired
+        dispatch: PropTypes.func.isRequired
     };
 
     componentWillMount() {
