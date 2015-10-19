@@ -18,6 +18,10 @@ export default class PlayAnimationSection extends Component {
         tracks: PropTypes.array.isRequired,
         dispatch: PropTypes.func.isRequired
     };
+
+    state = {
+        imageMultiplier: 0
+    }
     
     componentDidMount() {
         // create the nodes/elements
@@ -28,7 +32,7 @@ export default class PlayAnimationSection extends Component {
         const analyserNode = audioContext.createAnalyser();
         const sampleSize = 1024;
         const javascriptNode = audioContext.createScriptProcessor(sampleSize, 1, 1);
-        const amplitudeArray = new Float32Array(analyserNode.frequencyBinCount);
+        this.amplitudeArray = new Float32Array(analyserNode.frequencyBinCount);
 
         // connect things
         sourceNode.connect(audioContext.destination);
@@ -38,11 +42,11 @@ export default class PlayAnimationSection extends Component {
 
         // setup the handler
         javascriptNode.onaudioprocess = () => {
-            // XXX: do I need to redefine amplitude Array in here?
-            analyserNode.getByteTimeDomainData(amplitudeArray);
+            this.amplitudeArray = new Uint8Array(analyserNode.frequencyBinCount);
+            analyserNode.getByteTimeDomainData(this.amplitudeArray);
 
             // if (this.audioPlaying === true) {
-            // requestAnimationFrameFunction(_drawTimeDomain);
+            requestAnimationFrameFunction(::this._drawTimeDomain);
             // }
         };
 
@@ -50,26 +54,24 @@ export default class PlayAnimationSection extends Component {
         sourceNode.start(0);
     }
 
-    // _drawTimeDomain() {
-    //     window.requestAnimationFrame(window._drawTimeDomain);
-    //     window.frameCount = (window.frameCount || 0);
-    //     let minValue = Infinity;
-    //     let maxValue = -Infinity;
-    //     for (let i = 0; i < window.amplitudeArray.length; i++) {
-    //         const value = window.amplitudeArray[i] / 255;
-    //         if (value > maxValue) {
-    //             maxValue = value;
-    //         } else if (value < minValue) {
-    //             minValue = value;
-    //         }
-    //     }
-    //     window.frameCount += 1;
-    //     if (window.frameCount > 200) {
-    //         console.log(maxValue);
-    //         window.frameCount = 0;
-    //     }
-    // }
-    // }
+    _drawTimeDomain() {
+        const requestAnimationFrameFunction = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozAnimationFrame);
+        requestAnimationFrameFunction(::this._drawTimeDomain);
+
+        let minValue = Infinity;
+        let maxValue = -Infinity;
+
+        for (let i = 0; i < this.amplitudeArray.length; i++) {
+            const value = this.amplitudeArray[i] / 255;
+            if (value > maxValue) {
+                maxValue = value;
+            } else if (value < minValue) {
+                minValue = value;
+            }
+        }
+
+        this.setState({ imageMultiplier: maxValue });
+    }
 
 
     render() {
@@ -77,7 +79,7 @@ export default class PlayAnimationSection extends Component {
             return (
                 <img 
                 src={ imageSrc } 
-                height="100"
+                height={100 * this.state.imageMultiplier}
                 key={ i } />
             );
         });
