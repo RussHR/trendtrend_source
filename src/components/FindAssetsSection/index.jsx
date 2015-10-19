@@ -13,15 +13,10 @@ export default class FindAssetsSection extends Component {
         this.props.dispatch(ActionCreators.clearAssets());
     }
 
-    componentDidMount() {
-        const { dispatch, params, history } = this.props;
-        dispatch(ActionCreators.findAssets(params.tag, history));
-    }
-
     render() {
         return (
             <ContentCenter>
-                <span>Finding images...</span>
+                <span>Finding assets...</span>
             </ContentCenter>
         );
     }

@@ -3,7 +3,7 @@ import * as types from '../constants/ActionTypes';
 
 function currentPhase(state = 'requestTag', action) {
     switch (action.type) {
-        case types.SET_CURRENT_PHASE:
+        case types.SET_PHASE:
             return action.payload.phase;
         default:
             return state;

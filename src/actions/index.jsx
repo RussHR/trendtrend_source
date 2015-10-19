@@ -3,12 +3,15 @@ import { getPeaksFromBuffer } from '../helperFunctions';
 import superagent from 'superagent';
 import jsonp from 'jsonp';
 
-// request tag
-export function goToRequestTag(history) {
-    return (dispatch) => {
-        history.pushState(null, '/');
-    };
+// set phase
+function setPhase(phase) {
+    return {
+        type: types.SET_PHASE,
+        payload: { phase }
+    }
 }
+
+// request tag
 export function clearAssets() {
     return (dispatch) => {
         dispatch(clearImageSrcs());
@@ -27,13 +30,10 @@ function resetLoadedImageCount() {
 }
 
 // finding assets
-export function goToFindAssets(tag, history) {
+export function findAssets(tag) {
     return (dispatch) => {
-        history.pushState(null, `/find-assets/${ tag }`);
-    };
-}
-export function findAssets(tag, history) {
-    return (dispatch) => {
+        dispatch(setPhase('findAssets'));
+
         const tracksPromise = new Promise((resolve, reject) => {
             superagent.get('https://api.spotify.com/v1/search')
                 .query({
@@ -59,10 +59,11 @@ export function findAssets(tag, history) {
             .then((values) => {
                 dispatch(setTracks(values[0]));
                 dispatch(setImageSrcs(values[1]));
-                dispatch(goToLoadAssets(history)); // must come after setting
+                dispatch(setPhase('loadAssets')); // must come after setting
             })
             .catch((reason) => {
                 console.log(reason);
+                dispatch(setPhase('requestTag'));
             });
     }
 }
@@ -101,12 +102,6 @@ function fetchImageSrcs(tag, resolve, reject, beforeTime = (Date.parse(new Date(
     );
 }
 
-// setting assets and navigating to load assets
-function goToLoadAssets(history) {
-    return (dispatch) => {
-        history.pushState(null, '/load-assets');
-    };
-}
 function setTracks(tracks) {
     return {
         type: types.SET_TRACKS,
@@ -121,7 +116,7 @@ function setImageSrcs(imageSrcs) {
 }
 
 // loading assets
-export function getAndAnalyzeAssets(tracks, imageSrcs, history) {
+export function getAndAnalyzeAssets(tracks, imageSrcs) {
     return (dispatch) => {
         const tracksAnalysedPromise = new Promise((resolve, reject) => {
             dispatch(getAudioBuffersAndThresholds(tracks, resolve));
@@ -134,10 +129,11 @@ export function getAndAnalyzeAssets(tracks, imageSrcs, history) {
         Promise.all([tracksAnalysedPromise, imagesFetchedPromise])
             .then((values) => {
                 dispatch(setTracks(values[0]));
-                window.location.hash = '#/play-animation';
+                dispatch(setPhase('playAnimation'));
             })
             .catch((reason) => {
                 console.log(reason);
+                dispatch(setPhase('requestTag'));
             });
     };
 }

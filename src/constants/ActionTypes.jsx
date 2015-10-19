@@ -1,3 +1,5 @@
+export const SET_PHASE = 'SET_PHASE';
+
 export const CLEAR_IMAGE_SRCS = 'CLEAR_IMAGE_SRCS';
 export const RESET_LOADED_IMAGE_COUNT = 'RESET_LOADED_IMAGE_COUNT';
 

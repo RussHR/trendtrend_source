@@ -9,6 +9,10 @@ import PlayAnimationSection from './components/PlayAnimationSection';
     currentPhase: state.currentPhase
 }))
 export default class TrendtrendApp extends Component {
+    static propTypes = {
+        currentPhase: PropTypes.string.isRequired
+    };
+
     render() {
         // at the moment, don't know an alternative to switch
         let currentSection;

@@ -13,8 +13,7 @@ export default class RequestTagSection extends Component {
         e.preventDefault();
         const tag = findDOMNode(this.refs.tag).value.trim();
         if (tag) {
-            const { dispatch, history } = this.props;
-            dispatch(ActionCreators.goToFindAssets(tag, history));
+            this.props.dispatch(ActionCreators.findAssets(tag));
         }
     }
 

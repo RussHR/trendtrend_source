@@ -5,7 +5,7 @@ import * as ActionCreators                           from '../../actions';
 @connect(state => ({
     imageSrcs: state.imageSrcs
 }))
-export default class ImageAnimationSection extends Component {
+export default class PlayAnimationSection extends Component {
     static propTypes ={
         imageSrcs: (props, propName, componentName) => {
             if (props[propName].length !== 20) {
@@ -16,11 +16,6 @@ export default class ImageAnimationSection extends Component {
         },
         dispatch: PropTypes.func.isRequired
     };
-
-    componentWillMount() {
-        const { imageSrcs, dispatch, history } = this.props;
-        if (imageSrcs.length < 20) dispatch(ActionCreators.goToRequestTag(history));
-    }
     
     render() {
         let images = this.props.imageSrcs.map((imageSrc, i) => {

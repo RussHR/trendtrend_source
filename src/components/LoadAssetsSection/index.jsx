@@ -24,14 +24,9 @@ export default class LoadAssetsSection extends Component {
         dispatch: PropTypes.func.isRequired
     };
 
-    componentWillMount() {
-        const { imageSrcs, dispatch, history } = this.props;
-        if (imageSrcs.length < 20) dispatch(ActionCreators.goToRequestTag(history));
-    }
-
     componentDidMount() {
         const { dispatch, tracks, imageSrcs } = this.props;
-        this.props.dispatch(ActionCreators.getAndAnalyzeAssets(tracks, imageSrcs, history));
+        this.props.dispatch(ActionCreators.getAndAnalyzeAssets(tracks, imageSrcs));
         // create the nodes/elements
         // const requestAnimationFrameFunction = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozAnimationFrame);
         // this.audioContext = new AudioContextClass();
