@@ -35,6 +35,7 @@
   "dependencies": {
     "browser-request": "^0.3.3",
     "jsonp": "^0.2.0",
+    "lodash": "^3.10.1",
     "react": "^0.13.3",
     "react-redux": "^2.1.1",
     "redux": "^2.0.0",

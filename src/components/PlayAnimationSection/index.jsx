@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { connect }                     from 'react-redux';
-import * as ActionCreators                           from '../../actions';
+import { connect } from 'react-redux';
+import throttle from 'lodash/function/throttle'
+import * as ActionCreators from '../../actions';
 
 @connect(state => ({
     imageSrcs: state.imageSrcs,
@@ -41,33 +42,22 @@ export default class PlayAnimationSection extends Component {
         javascriptNode.connect(audioContext.destination);
 
         // setup the handler
-        javascriptNode.onaudioprocess = () => {
+        javascriptNode.onaudioprocess = throttle(() => {
             this.amplitudeArray = new Uint8Array(analyserNode.frequencyBinCount);
             analyserNode.getByteTimeDomainData(this.amplitudeArray);
-
-            // if (this.audioPlaying === true) {
-            requestAnimationFrameFunction(::this._drawTimeDomain);
-            // }
-        };
+            this._drawTimeDomain();
+        }, 500);
 
         sourceNode.buffer = this.props.tracks[0].audioBuffer;
         sourceNode.start(0);
     }
 
     _drawTimeDomain() {
-        const requestAnimationFrameFunction = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozAnimationFrame);
-        requestAnimationFrameFunction(::this._drawTimeDomain);
-
-        let minValue = Infinity;
         let maxValue = -Infinity;
 
         for (let i = 0; i < this.amplitudeArray.length; i++) {
             const value = this.amplitudeArray[i] / 255;
-            if (value > maxValue) {
-                maxValue = value;
-            } else if (value < minValue) {
-                minValue = value;
-            }
+            if (value > maxValue) maxValue = value;
         }
 
         this.setState({ imageMultiplier: maxValue });
@@ -75,11 +65,12 @@ export default class PlayAnimationSection extends Component {
 
 
     render() {
-        let images = this.props.imageSrcs.map((imageSrc, i) => {
+        const height = `${100 * this.state.imageMultiplier}px`;
+        const images = this.props.imageSrcs.map((imageSrc, i) => {
             return (
                 <img 
                 src={ imageSrc } 
-                height={100 * this.state.imageMultiplier}
+                style={{ height }}
                 key={ i } />
             );
         });
