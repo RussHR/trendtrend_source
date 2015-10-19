@@ -25,7 +25,7 @@ function loadedImageCount(state = 0, action) {
     switch (action.type) {
         case types.RESET_LOADED_IMAGE_COUNT:
             return 0;
-        case types.INCREMENT_LOADED_IMAGES:
+        case types.INCREMENT_LOADED_IMAGE_COUNT:
             return action.payload.loadedImageCount + 1;
         default:
             return state;

@@ -121,43 +121,70 @@ function setImageSrcs(imageSrcs) {
 }
 
 // loading assets
-export function getAudioBuffersAndThresholds(tracks) {
+export function getAndAnalyzeAssets(tracks, imageSrcs, history) {
+    return (dispatch) => {
+        const tracksAnalysedPromise = new Promise((resolve, reject) => {
+            dispatch(getAudioBuffersAndThresholds(tracks, resolve));
+        });
+
+        const imagesFetchedPromise = new Promise((resolve, reject) => {
+            dispatch(fetchImages(imageSrcs, resolve));
+        });
+        
+        Promise.all([tracksAnalysedPromise, imagesFetchedPromise])
+            .then((values) => {
+                dispatch(setTracks(values[0]));
+                window.location.hash = '#/play-animation';
+            })
+            .catch((reason) => {
+                console.log(reason);
+            });
+    };
+}
+function fetchImages(imageSrcs, resolve) {
+    return (dispatch) => {
+        let fetchedImageCount = 0;
+        imageSrcs.forEach((imageSrc) => {
+            const image = new Image();
+            image.src = imageSrc;
+            image.onload = () => {
+                dispatch(incrementLoadedImageCount(fetchedImageCount));
+                fetchedImageCount++;
+                console.log(fetchedImageCount);
+                if (fetchedImageCount === 20) resolve();
+            };
+        });
+    };
+}
+function getAudioBuffersAndThresholds(tracks, tracksAnalysedResolve) {
     return (dispatch) => {
         const AudioContextClass = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext);
         const audioContext = new AudioContextClass();
 
-        const audioBufferPromise = new Promise((resolve, reject) => {
+        const analysedTracks = [];
+        let numOfBuffersFetched = 0;
+        tracks.forEach((track) => {
+            const request = new XMLHttpRequest();
+            request.open('GET', track.preview_url, true)
+            request.responseType = 'arraybuffer';
+            request.send();
+            request.onload = (e) => {
+                audioContext.decodeAudioData(request.response, (audioBuffer) => {
+                    dispatch(incrementLoadedBuffer(numOfBuffersFetched));
+                    numOfBuffersFetched++;
 
-            const analysedTracks = [];
-            let numOfBuffersFetched = 0;
-            tracks.forEach((track) => {
-                const request = new XMLHttpRequest();
-                request.open('GET', track.preview_url, true)
-                request.responseType = 'arraybuffer';
-                request.send();
-                request.onload = (e) => {
-                    audioContext.decodeAudioData(request.response, (audioBuffer) => {
-                        dispatch(incrementLoadedBuffer(numOfBuffersFetched));
-                        numOfBuffersFetched++;
-
-                        const thresholdPromise = new Promise((thresholdResolve, thresholdReject) => {
-                            getPeaksFromBuffer(audioBuffer, thresholdResolve);
-                        });
-
-                        thresholdPromise.then((audioBufferAndThreshold) => {
-                            dispatch(incrementAnalysedTrackCount(analysedTracks.length));
-                            // audioBufferAndThreshold is { audioBuffer, threshold }
-                            analysedTracks.push({ ...audioBufferAndThreshold, ...track });
-                            if (analysedTracks.length === 3) resolve(analysedTracks);
-                        });
+                    const thresholdPromise = new Promise((thresholdResolve, thresholdReject) => {
+                        getPeaksFromBuffer(audioBuffer, thresholdResolve);
                     });
-                };
-            });
-        });
 
-        audioBufferPromise.then((tracks) => {
-            console.log(tracks);
-            dispatch(setTracks(tracks));
+                    thresholdPromise.then((audioBufferAndThreshold) => {
+                        dispatch(incrementAnalysedTrackCount(analysedTracks.length));
+                        // audioBufferAndThreshold is { audioBuffer, threshold }
+                        analysedTracks.push({ ...audioBufferAndThreshold, ...track });
+                        if (analysedTracks.length === 3) tracksAnalysedResolve(analysedTracks);
+                    });
+                });
+            };
         });
     };
 }
@@ -173,15 +200,9 @@ function incrementAnalysedTrackCount(analysedTrackCount) {
         payload: { analysedTrackCount }
     };
 }
-
-export function imageLoaded(loadedImageCount, history) {
-    return (dispatch) => {
-        dispatch(incrementLoadedImages(loadedImageCount));
-    };
-}
-function incrementLoadedImages(loadedImageCount) {
+function incrementLoadedImageCount(loadedImageCount) {
     return {
-        type: types.INCREMENT_LOADED_IMAGES,
+        type: types.INCREMENT_LOADED_IMAGE_COUNT,
         payload: { loadedImageCount }
     };
 }

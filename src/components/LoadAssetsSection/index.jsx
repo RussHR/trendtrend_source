@@ -36,7 +36,8 @@ export default class LoadAssetsSection extends Component {
     }
 
     componentDidMount() {
-        this._getAudioBuffersAndThresholds();
+        const { dispatch, tracks, imageSrcs } = this.props;
+        this.props.dispatch(ActionCreators.getAndAnalyzeAssets(tracks, imageSrcs, history));
         // create the nodes/elements
         // const requestAnimationFrameFunction = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozAnimationFrame);
         // this.audioContext = new AudioContextClass();
@@ -71,11 +72,6 @@ export default class LoadAssetsSection extends Component {
         // } else {
         //     this._playSound(audioData);
         // }
-    }
-
-    _getAudioBuffersAndThresholds() {
-        const { dispatch, tracks } = this.props;
-        dispatch(ActionCreators.getAudioBuffersAndThresholds(tracks));
     }
 
     // _loadSound(url) {
@@ -130,23 +126,8 @@ export default class LoadAssetsSection extends Component {
     //     };
     // }
 
-
-    incrementLoadedImages() {
-        const { dispatch, loadedImageCount, history } = this.props;
-        dispatch(ActionCreators.imageLoaded(loadedImageCount, history));
-    }
-
     render() {
-        const { imageSrcs, loadedImageCount, loadedAudioBufferCount, analysedTrackCount } = this.props;
-        const images = imageSrcs.map((imageSrc, i) => {
-            return (
-                <img 
-                src={ imageSrc } 
-                key={ i } 
-                onLoad={ ::this.incrementLoadedImages }
-                className="loading-image" />
-            );
-        });
+        const { loadedImageCount, loadedAudioBufferCount, analysedTrackCount } = this.props;
 
         return (
             <ContentCenter>
@@ -155,7 +136,6 @@ export default class LoadAssetsSection extends Component {
                 <span>Loaded Audio Track Count: { loadedAudioBufferCount }/3</span>
                 <br />
                 <span>Tracks Analysed: { analysedTrackCount }/3</span>
-                {images}
             </ContentCenter>
         );
     }
