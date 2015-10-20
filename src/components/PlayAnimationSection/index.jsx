@@ -21,7 +21,8 @@ export default class PlayAnimationSection extends Component {
     };
 
     state = {
-        sizeMultiplier: 0
+        sizeMultiplier: 0,
+        currentBgImgIndex: 0
     }
     
     componentDidMount() {
@@ -81,13 +82,17 @@ export default class PlayAnimationSection extends Component {
 
 
     render() {
-        const { sizeMultiplier } = this.state;
+        const { sizeMultiplier, currentBgImgIndex } = this.state;
+        const { imageSrcs } = this.props;
+        const cssBgImg = {
+            backgroundImage: `url(${imageSrcs[currentBgImgIndex]})`
+        };
         const cssScaleObj = {
             transform: `scale(${sizeMultiplier})`,
             MozTransform: `scale(${sizeMultiplier})`,
             WebkitTransform: `scale(${sizeMultiplier})`
         }
-        const images = this.props.imageSrcs.map((imageSrc, i) => {
+        const images = imageSrcs.map((imageSrc, i) => {
             return (
                 <img 
                 className="animation-image"
@@ -98,7 +103,7 @@ export default class PlayAnimationSection extends Component {
         });
         
         return (
-            <div>
+            <div className="anim-container" style={cssBgImg}>
                 {images}
             </div>
         );
