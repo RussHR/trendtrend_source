@@ -59,7 +59,8 @@ export default class PlayAnimationSection extends Component {
         sourceNode2.onended = () => {
             sourceNode3.start(0);
         };
-
+        console.log(sourceNode1.onended);
+        console.log(sourceNode2.onended);
         sourceNode1.start(0);
     }
 
