@@ -22,7 +22,8 @@ export default class PlayAnimationSection extends Component {
 
     state = {
         sizeMultiplier: 0,
-        currentBgImgIndex: 0
+        currentBgImgIndex: 0,
+        currentTrackIndex: 0
     }
     
     componentDidMount() {
@@ -55,10 +56,14 @@ export default class PlayAnimationSection extends Component {
         }, 100);
 
         sourceNode1.onended = () => {
-            sourceNode2.start(0);
+            this.setState({ currentTrackIndex: 1 }, () => {
+                sourceNode2.start(0);
+            });
         };
         sourceNode2.onended = () => {
-            sourceNode3.start(0);
+            this.setState({ currentTrackIndex: 2 }, () => {
+                sourceNode3.start(0);
+            });
         };
         console.log(sourceNode1.onended);
         console.log(sourceNode2.onended);
@@ -66,9 +71,9 @@ export default class PlayAnimationSection extends Component {
     }
 
     setImageHeight() {
-        const { currentBgImgIndex } = this.state;
+        const { currentBgImgIndex, currentTrackIndex } = this.state;
         const { tracks } = this.props;
-        const { threshold } = tracks[0];
+        const { threshold } = tracks[currentTrackIndex];
         let maxValue = -Infinity;
 
         for (let i = 0; i < this.amplitudeArray.length; i++) {
