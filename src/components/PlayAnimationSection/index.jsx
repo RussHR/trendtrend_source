@@ -66,7 +66,9 @@ export default class PlayAnimationSection extends Component {
     }
 
     setImageHeight() {
-        const { threshold } = this.props.tracks[0];
+        const { currentBgImgIndex } = this.state;
+        const { tracks } = this.props;
+        const { threshold } = tracks[0];
         let maxValue = -Infinity;
 
         for (let i = 0; i < this.amplitudeArray.length; i++) {
@@ -74,7 +76,10 @@ export default class PlayAnimationSection extends Component {
             if (value > maxValue) maxValue = value;
         }
 
-        if (maxValue > threshold) console.log (maxValue, threshold);
+        if (maxValue > threshold) {
+            const newBgImgIndex = currentBgImgIndex < 19 ? currentBgImgIndex + 1 : 0;
+            this.setState({ currentBgImgIndex: newBgImgIndex });
+        }
         
         const sizeMultiplier = Math.pow((maxValue/255), 4);
         this.setState({ sizeMultiplier });

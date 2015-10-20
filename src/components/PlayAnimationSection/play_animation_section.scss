@@ -5,3 +5,6 @@
     max-width: 300px;
     @include transition(all 0.1s);
 }
+.anim-container {
+    @include transition(background-image 0.1s);
+}
