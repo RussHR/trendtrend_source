@@ -29,27 +29,38 @@ export default class PlayAnimationSection extends Component {
         const requestAnimationFrameFunction = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozAnimationFrame);
         const AudioContextClass = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext);
         const audioContext = new AudioContextClass();
-        const sourceNode = audioContext.createBufferSource();
+        const [sourceNode1, sourceNode2, sourceNode3] = [audioContext.createBufferSource(), audioContext.createBufferSource(), audioContext.createBufferSource()];
         const analyserNode = audioContext.createAnalyser();
         const sampleSize = 1024;
         const javascriptNode = audioContext.createScriptProcessor(sampleSize, 1, 1);
-        this.amplitudeArray = new Float32Array(analyserNode.frequencyBinCount);
+        this.amplitudeArray = new Uint8Array(analyserNode.frequencyBinCount);
 
-        // connect things
-        sourceNode.connect(audioContext.destination);
-        sourceNode.connect(analyserNode);
+        [sourceNode1, sourceNode2, sourceNode3].forEach((sourceNode, index) => {
+            // connect nodes
+            sourceNode.connect(audioContext.destination);
+            sourceNode.connect(analyserNode);
+
+            // set source buffers
+            sourceNode.buffer = this.props.tracks[index].audioBuffer;
+        });
+
         analyserNode.connect(javascriptNode);
         javascriptNode.connect(audioContext.destination);
 
         // setup the handler
         javascriptNode.onaudioprocess = throttle(() => {
-            this.amplitudeArray = new Uint8Array(analyserNode.frequencyBinCount);
             analyserNode.getByteTimeDomainData(this.amplitudeArray);
             this.setImageHeight();
         }, 100);
 
-        sourceNode.buffer = this.props.tracks[0].audioBuffer;
-        sourceNode.start(0);
+        sourceNode1.onended = () => {
+            sourceNode2.start(0);
+        };
+        sourceNode2.onended = () => {
+            sourceNode3.start(0);
+        };
+
+        sourceNode1.start(0);
     }
 
     setImageHeight() {
